@@ -1,0 +1,53 @@
+[2023-09-11 06:04:08 | 0:00:00.046066 | INFO    ]: 文件位置: E:\Developments\Projects\DefaultPyCharmProSpace\data\temp\pubmed\data.csv
+[2023-09-11 06:04:08 | 0:00:00.046066 | INFO    ]: 文件位置: E:\Developments\Projects\DefaultPyCharmProSpace\data\temp\pubmed_DB\data.csv
+[2023-09-11 06:04:11 | 0:00:02.345319 | INFO    ]: 保存位置: E:\Developments\Projects\DefaultPyCharmProSpace\data\temp\new_merge_data.csv
+[2023-09-11 06:04:11 | 0:00:02.346311 | ERROR   ]: An error has been caught in function 'test', process 'MainProcess' (43280), thread 'MainThread' (34508):
+Traceback (most recent call last):
+
+  File "E:\Developments\Projects\DefaultPyCharmProSpace\tools\processing_data.py", line 60, in merge_csv_row
+    sss.ao()
+
+NameError: name 'sss' is not defined
+
+
+During handling of the above exception, another exception occurred:
+
+
+Traceback (most recent call last):
+
+  File "E:\Developments\Projects\DefaultPyCharmProSpace\test\test_tools.py", line 41, in <module>
+    print(test())
+          └ <function test at 0x00000251B8E029D0>
+
+> File "E:\Developments\Projects\DefaultPyCharmProSpace\test\test_tools.py", line 27, in test
+    return TestStaticClass.merge_csv_row(file_a=data_a_path, file_b=data_b_path, merge_csv_path='data/temp/new_merge_data.csv')
+           │               │                    │                   └ 'E:\\Developments\\Projects\\DefaultPyCharmProSpace\\data\\temp\\pubmed_DB\\data.csv'
+           │               │                    └ 'E:\\Developments\\Projects\\DefaultPyCharmProSpace\\data\\temp\\pubmed\\data.csv'
+           │               └ <staticmethod object at 0x00000251DB24AA00>
+           └ <class 'tools.processing_data.TestStaticClass'>
+
+  File "E:\Developments\Projects\DefaultPyCharmProSpace\tools\processing_data.py", line 64, in merge_csv_row
+    loggers.error(error)
+
+NameError: name 'loggers' is not defined
+[2023-09-11 06:05:49 | 0:00:00.041728 | INFO    ]: 文件位置: E:\Developments\Projects\DefaultPyCharmProSpace\data\temp\pubmed\data.csv
+[2023-09-11 06:05:49 | 0:00:00.041728 | INFO    ]: 文件位置: E:\Developments\Projects\DefaultPyCharmProSpace\data\temp\pubmed_DB\data.csv
+[2023-09-11 06:05:52 | 0:00:02.303992 | INFO    ]: 保存位置: E:\Developments\Projects\DefaultPyCharmProSpace\data\temp\new_merge_data.csv
+[2023-09-11 06:05:52 | 0:00:02.303992 | ERROR   ]: name 'sss' is not defined
+Traceback (most recent call last):
+
+  File "E:\Developments\Projects\DefaultPyCharmProSpace\test\test_tools.py", line 41, in <module>
+    print(test())
+          └ <function test at 0x000001F10E0C29D0>
+
+  File "E:\Developments\Projects\DefaultPyCharmProSpace\test\test_tools.py", line 27, in test
+    return TestStaticClass.merge_csv_row(file_a=data_a_path, file_b=data_b_path, merge_csv_path='data/temp/new_merge_data.csv')
+           │               │                    │                   └ 'E:\\Developments\\Projects\\DefaultPyCharmProSpace\\data\\temp\\pubmed_DB\\data.csv'
+           │               │                    └ 'E:\\Developments\\Projects\\DefaultPyCharmProSpace\\data\\temp\\pubmed\\data.csv'
+           │               └ <staticmethod object at 0x000001F1304FAA30>
+           └ <class 'tools.processing_data.TestStaticClass'>
+
+> File "E:\Developments\Projects\DefaultPyCharmProSpace\tools\processing_data.py", line 60, in merge_csv_row
+    sss.ao()
+
+NameError: name 'sss' is not defined
