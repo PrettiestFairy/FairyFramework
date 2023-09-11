@@ -24,8 +24,8 @@ class JournalsModule:
         self.__config_logger()
 
     def __config_logger(self):
-        from utils.public_utils import PublicUtilsStaticClass
-        logs_path = PublicUtilsStaticClass.path_root_conver_system_separator(os.path.join(PublicUtilsStaticClass.path_root(), 'logs/services.logs'))
+        from utils.publics import PublicUtilsStaticClass
+        logs_path = PublicUtilsStaticClass.path_root_conver_system_separator(os.path.join(PublicUtilsStaticClass.path_root, 'logs/services.log'))
         logger.add(
             sink=logs_path,
             rotation='10 MB',

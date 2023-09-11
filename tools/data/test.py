@@ -1,11 +1,11 @@
 # coding: utf8
 """ 
-@ File: processing_data.py
+@ File: test.py
 @ Editor: PyCharm
 @ Author: Austin (From Chengdu.China)
 @ HomePage: https://github.com/AceProfessional
 @ OS: Windows 11 Professional Workstation 22H2
-@ CreatedTime: 2023-09-10
+@ CreatedTime: 2023-09-11
 """
 
 import sys
@@ -14,12 +14,12 @@ import warnings
 sys.dont_write_bytecode = True
 warnings.filterwarnings('ignore')
 
+import os
 import pandas as pd
 import numpy as np
-import os
 
-from utils.public_utils import PublicUtilsStaticClass
 from modules.journals import JournalsModule
+from utils.publics import PublicUtilsStaticClass
 
 
 class TestStaticClass:
@@ -45,7 +45,7 @@ class TestStaticClass:
                 merge_csv_path = 'new_merge_data.csv'
             else:
                 merge_file_path, merge_file_name = os.path.split(merge_csv_path)
-                merge_file_path = PublicUtilsStaticClass.path_root_conver_system_separator(os.path.join(PublicUtilsStaticClass.path_root(), merge_file_path))
+                merge_file_path = PublicUtilsStaticClass.path_root_conver_system_separator(os.path.join(PublicUtilsStaticClass.path_root, merge_file_path))
                 if os.path.isdir(merge_file_path) is False:
                     os.mkdir(merge_file_path)
             JournalsModule.info('文件位置: {}'.format(file_a))
@@ -54,10 +54,10 @@ class TestStaticClass:
             data_b_array = np.array(pd.read_csv(file_b))
             merge_array = np.row_stack((data_a_array, data_b_array))
             merge_retuls = pd.DataFrame(merge_array)
-            merge_file_path = PublicUtilsStaticClass.path_root_conver_system_separator(os.path.join(PublicUtilsStaticClass.path_root(), merge_csv_path))
+            merge_file_path = PublicUtilsStaticClass.path_root_conver_system_separator(os.path.join(PublicUtilsStaticClass.path_root, merge_csv_path))
             merge_retuls.to_csv(merge_file_path, index=False, header=False)
             JournalsModule.info('保存位置: {}'.format(merge_file_path))
-            
+
             return merge_file_path
         except Exception as error:
             JournalsModule.exception(error)

@@ -14,9 +14,15 @@ import warnings
 sys.dont_write_bytecode = True
 warnings.filterwarnings('ignore')
 
-from utils.public_utils import PublicUtils
+import os
+
+from utils.publics import PublicUtilsStaticClass
 
 if __name__ == '__main__':
-    public_utils = PublicUtils()
-    root = public_utils.path_root()
-    print(root)
+    # public_utils = PublicUtils()
+    # root = public_utils.path_root()
+    print(PublicUtilsStaticClass.path_root)
+    ss = os.path.join(PublicUtilsStaticClass.path_root, 'data/temp/test.txt')
+    print('path: {}'.format(ss))
+    print('path: {}'.format(PublicUtilsStaticClass.path_root_conver_system_separator(sys_path=ss)))
+    print('Done')
