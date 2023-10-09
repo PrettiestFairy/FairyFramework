@@ -2,8 +2,8 @@
 """ 
 @ File: utils.py
 @ Editor: PyCharm
-@ Author: Austin (From Chengdu.China)
-@ HomePage: https://github.com/AceProfessional
+@ Author: Austin (From Chengdu.China) https://fairy.host
+@ HomePage: https://github.com/AustinFairyland
 @ OS: Windows 11 Professional Workstation 22H2
 @ CreatedTime: 2023-09-11
 """
