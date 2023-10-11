@@ -24,7 +24,7 @@ import time
 import random
 
 
-class PublicUtilsBaseClass:
+class PublicToolsBaseClass:
     """ 公共工具基类 """
 
     def __init__(self):
@@ -34,16 +34,16 @@ class PublicUtilsBaseClass:
     def root_path(self) -> str:
         """
         项目根路径
-        :return: 项目根路径
+        :return: String 项目根路径
         """
         return os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
     def conver_slach(self, sys_path: str, paths: str = None) -> str:
         """
         转换路径分隔符为系统分隔符
-        :param sys_path: 系统路径
-        :param paths: 路径
-        :return: 系统路径
+        :param sys_path: String 系统路径
+        :param paths: String 路径
+        :return: String 转换为系统分隔符后的系统路径
         """
         if paths is not None:
             sys_path = os.path.join(sys_path, paths)
