@@ -25,6 +25,8 @@ import random
 
 from .base import PublicUtilsBaseClass
 
+PublicUtilsBaseClass = PublicUtilsBaseClass()
+
 __all__ = [
     'PublicUtilsBaseClass'
 ]

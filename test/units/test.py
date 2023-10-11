@@ -25,17 +25,18 @@ import random
 
 from utils.publics import PublicUtilsBaseClass
 from modules.journals import JournalsModuleClass
+from conf import ConfigClass
 
 
 class TestClass:
 
     def __init__(self):
-        self.public_utils_base_cls = PublicUtilsBaseClass()
-        self.journals_module_cls = JournalsModuleClass()
+        pass
 
     def test_task_01(self) -> dict:
-        r_path = self.public_utils_base_cls.root_path
-        logs_dir_path = self.public_utils_base_cls.conver_slach(os.path.join(r_path, 'logs/services.log'))
+        r_path = PublicUtilsBaseClass.root_path
+        logs_dir_path = PublicUtilsBaseClass.conver_slach(r_path, paths='logs/services.log')
+        JournalsModuleClass.info('运行配置：{}'.format(ConfigClass.config))
         return {
             'root': r_path,
             'logs': logs_dir_path
@@ -48,5 +49,5 @@ class TestClass:
 if __name__ == '__main__':
     start_run_time = time.time()
     t_cls = TestClass()
-    t_cls.journals_module_cls.debug(t_cls.test_task_01())
-    t_cls.journals_module_cls.debug('run time: {}s'.format(time.time() - start_run_time))
+    JournalsModuleClass.debug(t_cls.test_task_01())
+    JournalsModuleClass.debug('run time: {}s'.format(time.time() - start_run_time))

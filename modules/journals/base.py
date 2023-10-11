@@ -32,11 +32,10 @@ class JournalsModuleClass:
     """日志模块类"""
 
     def __init__(self):
-        self.public_utils_base_class = PublicUtilsBaseClass()
         self.__config_logger()
 
     def __config_logger(self):
-        logs_path = self.public_utils_base_class.conver_slach(os.path.join(self.public_utils_base_class.root_path, 'logs/services.log'))
+        logs_path = PublicUtilsBaseClass.conver_slach(os.path.join(PublicUtilsBaseClass.root_path, 'logs/services.log'))
         logger.add(
             sink=logs_path,
             rotation='10 MB',

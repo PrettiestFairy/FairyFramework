@@ -1,0 +1,16 @@
+# @File: config.dev.yaml
+# @Editor: PyCharm
+# @Author: Austin (From Chengdu.China) https://fairy.host
+# @HomePage: https://github.com/AustinFairyland
+# @OperatingSystem: Windows 11 Professional Workstation 23H2 Canary Channel
+# @CreatedTime: 2023-10-11
+
+Development:
+  envname: development
+  test:
+    config_1: config_1
+    config_2: 2
+Test:
+  envname: test
+Production:
+  envname: production
