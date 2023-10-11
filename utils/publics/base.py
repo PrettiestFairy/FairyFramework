@@ -1,38 +1,43 @@
 # coding: utf8
 """ 
-@ File: utils.py
+@ File: base.py
 @ Editor: PyCharm
-@ Author: Austin (From Chengdu.China)
-@ HomePage: https://github.com/AceProfessional
+@ Author: Austin (From Chengdu.China) https://fairy.host
+@ HomePage: https://github.com/AustinFairyland
 @ OS: Windows 11 Professional Workstation 22H2
 @ CreatedTime: 2023-09-11
 """
+from __future__ import annotations
 
+import os
 import sys
 import warnings
+import platform
+import asyncio
 
 sys.dont_write_bytecode = True
 warnings.filterwarnings('ignore')
+if platform.system() == 'Windows':
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
-import os
-import platform
+import time
+import random
 
 
-class PublicUtilsStaticClass:
+class PublicUtilsBaseClass:
 
     def __init__(self):
         pass
 
     @property
-    def path_root(self) -> str:
+    def root_path(self) -> str:
         """
         项目根路径
         :return: 项目根路径
         """
         return os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
-    @staticmethod
-    def path_root_conver_system_separator(sys_path: str) -> str:
+    def conver_slach(self, sys_path: str) -> str:
         """
         转换路径分隔符为系统分隔符
         :param sys_path: 系统路径

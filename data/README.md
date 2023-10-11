@@ -5,7 +5,7 @@
 > @Author: [Austin (From Chengdu.China)](https://fairy.host)  
 > @HomePage: [AustinFairyland](https://github.com/AustinFairyland)  
 > @OperatingSystem: Windows 11 Professional Workstation 23H2 Canary Channel  
-> @CreatedTime: 2023-10-10
+> @CreatedTime: 2023-10-11
 
 [![Author](https://img.shields.io/badge/Author-Austin-orange)](https://t.me/FairyLtd)
 [![github](https://img.shields.io/badge/Github-Austin.D-green)](https://github.com/AustinFairyland)
@@ -48,36 +48,4 @@ Development Environment
 
 ---
 
-Language Switching: [English](README.md) | [Chinese](READMD-ZH_CN.md)
-
-## Structural Description Of Project
-
-```plain
-ProjectRoot. ----------- Project root path
-├─api ------------------ Project API file
-├─bin ------------------ Project startup script
-├─common --------------- Project Common Plug-in (Custom)
-├─conf ----------------- Project configuration file
-├─controller ----------- Project mainstream algorithm
-├─core ----------------- Project core code
-├─data ----------------- Project data
-├─db ------------------- Project database related files, database interaction
-├─docs ----------------- Project documents
-├─logs ----------------- Project logs
-├─models --------------- Project models, and so on
-├─modules -------------- Project modules
-├─static --------------- Project static file
-├─templates ------------ Project static template file
-├─test ----------------- Project test code
-├─tools ---------------- Project customization toolkit
-└─utils ---------------- Project customization module
-```
-
-## Item Description
-
-- Default develop framework
-
-## About The Author
-
-- Author: [Austin D](https://fairy.host)
-- Resume: [📄](https://mapping.fairy.host:4433/share/docs/resume.pdf)
+#
