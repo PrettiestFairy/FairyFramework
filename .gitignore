@@ -1,8 +1,6 @@
 .idea
 .venv
-
-*.log[s]
-
+*.log
 *.tar
 *.tar.gz
 *.gz

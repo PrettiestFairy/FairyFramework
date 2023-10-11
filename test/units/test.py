@@ -9,7 +9,6 @@
 """
 from __future__ import annotations
 
-import os
 import sys
 import warnings
 import platform
@@ -21,11 +20,13 @@ if platform.system() == 'Windows':
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 import time
-import random
 
-from utils.publics import PublicUtilsBaseClass
+from tools.publics import PublicToolsBaseClass
 from modules.journals import JournalsModuleClass
 from conf import ConfigClass
+from tools.database import MySQLStandaloneToolsClass
+from tools.database import MySQLMasterSlaveDBRouterToolsClass
+from tools.middleware import RedisStandaloneToolsClass
 
 
 class TestClass:
@@ -34,13 +35,26 @@ class TestClass:
         pass
 
     def test_task_01(self) -> dict:
-        r_path = PublicUtilsBaseClass.root_path
-        logs_dir_path = PublicUtilsBaseClass.conver_slach(r_path, paths='logs/services.log')
-        JournalsModuleClass.info('运行配置：{}'.format(ConfigClass.config))
-        return {
-            'root': r_path,
-            'logs': logs_dir_path
-        }
+        r_path = PublicToolsBaseClass.root_path
+        logs_dir_path = PublicToolsBaseClass.conver_slach(r_path, paths='logs/services.log')
+        config = ConfigClass.config
+        JournalsModuleClass.info('运行配置：{}'.format(config))
+        # print(config.get('datasource')['mysql']['dbrouter'])
+        # mysql = MySQLStandaloneToolsClass()
+        # mysql_db_router = MySQLMasterSlaveDBRouterToolsClass()
+        # mysql.update("""insert into test(name, score) values ('c', 100), ('c', 50);""")
+        # d = mysql.query('select * from test;')
+        # for i in d:
+        #     print(i)
+        # mysql_db_router.inster(query="""insert into test(name, score) values ('c', 100), ('c', 50);""")
+        # mysql_db_router.slave_operation(query="""show tables;""")
+        # d = mysql_db_router.query('select * from test;')
+        # for i in d:
+        #     print(i)
+        _redis = RedisStandaloneToolsClass()
+        _redis.redis_set('code', 1234)
+        d = _redis.redis_get('code')
+        return 'test_task_01 测试完成'
 
     def test_task_02(self):
         pass

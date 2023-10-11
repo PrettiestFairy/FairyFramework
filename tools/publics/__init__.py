@@ -23,10 +23,10 @@ if platform.system() == 'Windows':
 import time
 import random
 
-from .base import PublicUtilsBaseClass
+from .base import PublicToolsBaseClass
 
-PublicUtilsBaseClass = PublicUtilsBaseClass()
+PublicToolsBaseClass = PublicToolsBaseClass()
 
 __all__ = [
-    'PublicUtilsBaseClass'
+    'PublicToolsBaseClass'
 ]
