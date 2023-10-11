@@ -25,6 +25,8 @@ import random
 
 from .base import JournalsModuleClass
 
+JournalsModuleClass = JournalsModuleClass()
+
 __all__ = [
     'JournalsModuleClass'
 ]
