@@ -25,6 +25,7 @@ import random
 
 
 class PublicUtilsBaseClass:
+    """ 公共工具基类 """
 
     def __init__(self):
         pass
@@ -37,12 +38,15 @@ class PublicUtilsBaseClass:
         """
         return os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
-    def conver_slach(self, sys_path: str) -> str:
+    def conver_slach(self, sys_path: str, paths: str = None) -> str:
         """
         转换路径分隔符为系统分隔符
         :param sys_path: 系统路径
+        :param paths: 路径
         :return: 系统路径
         """
+        if paths is not None:
+            sys_path = os.path.join(sys_path, paths)
         if platform.system() == 'Windows':
             separator = '\\'
         else:
