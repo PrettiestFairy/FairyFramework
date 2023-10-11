@@ -20,13 +20,10 @@ warnings.filterwarnings('ignore')
 if platform.system() == 'Windows':
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
-import time
-import random
-
 from dotenv import load_dotenv
 import yaml
 
-from utils.publics import PublicUtilsBaseClass
+from tools.publics import PublicToolsBaseClass
 from modules.journals import JournalsModuleClass
 
 
@@ -37,13 +34,13 @@ class BaseConfigClass:
         self.__config_path = self.__get_config_path()
 
     def __get_config_path(self) -> str:
-        config_path = PublicUtilsBaseClass.conver_slach(PublicUtilsBaseClass.root_path, 'config.yaml')
+        config_path = PublicToolsBaseClass.conver_slach(PublicToolsBaseClass.root_path, 'config.yaml')
         if not os.path.isfile(config_path):
-            config_path = PublicUtilsBaseClass.conver_slach(PublicUtilsBaseClass.root_path, 'config.dev.yaml')
+            config_path = PublicToolsBaseClass.conver_slach(PublicToolsBaseClass.root_path, 'config.dev.yaml')
             if not os.path.isfile(config_path):
-                config_path = PublicUtilsBaseClass.conver_slach(PublicUtilsBaseClass.root_path, 'conf/config.yaml')
+                config_path = PublicToolsBaseClass.conver_slach(PublicToolsBaseClass.root_path, 'conf/config.yaml')
                 if not os.path.isfile(config_path):
-                    config_path = PublicUtilsBaseClass.conver_slach(PublicUtilsBaseClass.root_path, 'conf/config.dev.yaml')
+                    config_path = PublicToolsBaseClass.conver_slach(PublicToolsBaseClass.root_path, 'conf/config.dev.yaml')
         try:
             if os.path.isfile(config_path):
                 JournalsModuleClass.info('配置文件：{}'.format(config_path))
@@ -52,6 +49,7 @@ class BaseConfigClass:
                 raise Exception('配置文件加载失败')
         except Exception as error:
             JournalsModuleClass.exception(error)
+            sys.exit(1)
 
     def __base_config(self) -> dict:
         """
@@ -114,6 +112,7 @@ class ConfigClass(DevelopmentConfigClass, TestConfigClass, ProductionConfigClass
             JournalsModuleClass.info('项目运行环境：{}'.format(self.__run_env))
         except Exception as error:
             JournalsModuleClass.exception(error)
+            sys.exit(1)
 
     def __development(self) -> dict:
         return self._development_config()
