@@ -7,17 +7,24 @@
 @ OS: Windows 11 Professional Workstation 22H2
 @ CreatedTime: 2023-09-11
 """
+from __future__ import annotations
 
+import os
 import sys
 import warnings
+import platform
+import asyncio
 
 sys.dont_write_bytecode = True
 warnings.filterwarnings('ignore')
+if platform.system() == 'Windows':
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
-from .core import JournalsModule
+import time
+import random
 
-JournalsModule = JournalsModule()
+from .base import JournalsModuleClass
 
 __all__ = [
-    JournalsModule
+    'JournalsModuleClass'
 ]

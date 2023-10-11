@@ -1,31 +1,42 @@
 # coding: utf8
 """ 
-@ File: core.py
+@ File: base.py
 @ Editor: PyCharm
 @ Author: Austin (From Chengdu.China) https://fairy.host
 @ HomePage: https://github.com/AustinFairyland
 @ OS: Windows 11 Professional Workstation 22H2
 @ CreatedTime: 2023-09-11
 """
+from __future__ import annotations
 
+import os
 import sys
 import warnings
+import platform
+import asyncio
 
 sys.dont_write_bytecode = True
 warnings.filterwarnings('ignore')
+if platform.system() == 'Windows':
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+
+import time
+import random
 
 from loguru import logger
-import os
+
+from utils.publics import PublicUtilsBaseClass
 
 
-class JournalsModule:
+class JournalsModuleClass:
+    """日志模块类"""
 
     def __init__(self):
+        self.public_utils_base_class = PublicUtilsBaseClass()
         self.__config_logger()
 
     def __config_logger(self):
-        from utils.publics import PublicUtilsStaticClass
-        logs_path = PublicUtilsStaticClass.path_root_conver_system_separator(os.path.join(PublicUtilsStaticClass.path_root, 'logs/services.log'))
+        logs_path = self.public_utils_base_class.conver_slach(os.path.join(self.public_utils_base_class.root_path, 'logs/services.log'))
         logger.add(
             sink=logs_path,
             rotation='10 MB',
