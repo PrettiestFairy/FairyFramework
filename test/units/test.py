@@ -38,7 +38,19 @@ class TestClass:
         r_path = PublicToolsBaseClass.root_path
         logs_dir_path = PublicToolsBaseClass.conver_slach(r_path, paths='logs/services.log')
         config = ConfigClass.config
-        JournalsModuleClass.info('运行配置：{}'.format(config))
+        JournalsModuleClass.debug('运行配置：{}'.format(config))
+        redis_cluster_confg = ConfigClass.config.get('middleware').get('redis').get('cluster')
+        cluster_confg_list: list = []
+        __password_map = dict = {}
+        for standalone_confg in redis_cluster_confg:
+            standalone_confg: dict
+            __host = standalone_confg.get('host')
+            __port = standalone_confg.get('port')
+            __password = standalone_confg.get('password')
+            cluster_confg_list.append({'host': __host, 'port': __port})
+            __password_map['{}:{}'.format(__host, __port)] = __password
+        print(cluster_confg_list)
+        print(__password_map)
         # print(config.get('datasource')['mysql']['dbrouter'])
         # mysql = MySQLStandaloneToolsClass()
         # mysql_db_router = MySQLMasterSlaveDBRouterToolsClass()
@@ -52,7 +64,7 @@ class TestClass:
         # for i in d:
         #     print(i)
         _redis = RedisStandaloneToolsClass()
-        _redis.redis_set('code', 1234)
+        # _redis.redis_set('code', 1234)
         d = _redis.redis_get('code')
         return 'test_task_01 测试完成'
 
