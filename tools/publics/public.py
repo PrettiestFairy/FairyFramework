@@ -1,6 +1,6 @@
 # coding: utf8
 """ 
-@ File: __init__.py
+@ File: base.py
 @ Editor: PyCharm
 @ Author: Austin (From Chengdu.China) https://fairy.host
 @ HomePage: https://github.com/AustinFairyland
@@ -23,8 +23,17 @@ if platform.system() == 'Windows':
 import time
 import random
 
-from .public import PublicToolsBaseClass
 
-__all__ = [
-    'PublicToolsBaseClass'
-]
+class PublicToolsBaseClass:
+    """ 公共工具基类 """
+
+    def __init__(self):
+        pass
+
+    @property
+    def _root_path(self) -> str:
+        """
+        项目根路径
+        @return: 项目根路径: str
+        """
+        return os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))

@@ -25,10 +25,11 @@ from loguru import logger
 from tools.publics import PublicToolsBaseClass
 
 
-class JournalsModuleClass:
+class JournalsModuleClass(PublicToolsBaseClass):
     """日志模块类"""
 
     def __init__(self):
+        super().__init__()
         self.__config_logger()
 
     def __config_logger(self):
@@ -36,7 +37,7 @@ class JournalsModuleClass:
         logger 配置
         :return: Object logger对象
         """
-        logs_path = PublicToolsBaseClass.conver_slach(os.path.join(PublicToolsBaseClass.root_path, 'logs/services.log'))
+        logs_path = os.path.normpath(os.path.join(self._root_path, 'logs/services.log'))
         logger.add(
             sink=logs_path,
             rotation='10 MB',
@@ -58,7 +59,7 @@ class JournalsModuleClass:
         :return: Object logger对象
         """
         return logger
-    
+
     @property
     def catch(self):
         """

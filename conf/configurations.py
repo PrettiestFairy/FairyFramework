@@ -27,20 +27,21 @@ from tools.publics import PublicToolsBaseClass
 from modules.journals import JournalsModuleClass
 
 
-class BaseConfigClass:
+class BaseConfigClass(PublicToolsBaseClass):
     """ 基础配置基类 """
 
     def __init__(self):
+        super().__init__()
         self.__config_path = self.__get_config_path()
 
     def __get_config_path(self) -> str:
-        config_path = PublicToolsBaseClass.conver_slach(PublicToolsBaseClass.root_path, 'config.yaml')
+        config_path = os.path.normpath(os.path.join(self._root_path, 'config.yaml'))
         if not os.path.isfile(config_path):
-            config_path = PublicToolsBaseClass.conver_slach(PublicToolsBaseClass.root_path, 'config.dev.yaml')
+            config_path = os.path.normpath(os.path.join(self._root_path, 'config.dev.yaml'))
             if not os.path.isfile(config_path):
-                config_path = PublicToolsBaseClass.conver_slach(PublicToolsBaseClass.root_path, 'conf/config.yaml')
+                config_path = os.path.normpath(os.path.join(self._root_path, 'conf/config.yaml'))
                 if not os.path.isfile(config_path):
-                    config_path = PublicToolsBaseClass.conver_slach(PublicToolsBaseClass.root_path, 'conf/config.dev.yaml')
+                    config_path = os.path.normpath(os.path.join(self._root_path, 'conf/config.dev.yaml'))
         try:
             if os.path.isfile(config_path):
                 JournalsModuleClass.info('配置文件：{}'.format(config_path))

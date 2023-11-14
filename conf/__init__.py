@@ -25,7 +25,7 @@ import random
 
 from .configurations import ConfigClass
 
-ConfigClass = ConfigClass()
+# ConfigClass = ConfigClass()
 
 __all__ = [
     'ConfigClass'
