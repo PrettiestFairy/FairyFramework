@@ -1,0 +1,190 @@
+# @File: config.dev.yaml
+# @Editor: PyCharm
+# @Author: Austin (From Chengdu.China) https://fairy.host
+# @HomePage: https://github.com/AustinFairyland
+# @OperatingSystem: Windows 11 Professional Workstation 23H2 Canary Channel
+# @CreatedTime: 2023-10-11
+
+Development:
+  envname: development
+  datasource:
+    mysql:
+      standalone:
+        host: 10.0.12.3
+        port: 3306
+        user: root
+        password: root
+        database: tb_test
+        # 字符集可以不写 默认 utf8mb4
+        charset: utf8mb4
+      dbrouter:
+        master:
+          - host: 10.0.12.3
+            port: 3306
+            user: root
+            password: root
+            database: tb_test
+            # 字符集可以不写 默认 utf8mb4
+            charset: utf8mb4
+          - host: 10.0.12.3
+            port: 3306
+            user: root
+            password: root
+            database: tb_test
+            # 字符集可以不写 默认 utf8mb4
+            charset: utf8mb4
+        slave:
+          - host: 10.0.12.3
+            port: 3306
+            user: root
+            password: root
+            database: tb_test
+            # 字符集可以不写 默认 utf8mb4
+            charset: utf8mb4
+          - host: 10.0.12.3
+            port: 3306
+            user: root
+            password: root
+            database: tb_test
+            # 字符集可以不写 默认 utf8mb4
+            charset: utf8mb4
+  middleware:
+    redis:
+      standalone:
+        host: 10.0.12.3
+        port: 61001
+        # 密码可以为空
+        password: 123456
+        # 数据库可以不写 默认 0
+        db: 0
+      cluster:
+        - host: 10.0.12.3
+          port: 61001
+          # 密码可以为空
+          password: 123456
+          # 数据库可以不写 默认 0
+          db: 0
+        - host: 10.0.12.3
+          port: 61002
+          # 密码可以为空
+          password: 123456
+          # 数据库可以不写 默认 0
+          db: 0
+Test:
+  envname: test
+  datasource:
+    mysql:
+      standalone:
+        host: 10.0.12.3
+        port: 3306
+        user: root
+        password: root
+        database: tb_test
+        # 字符集可以不写 默认 utf8mb4
+        charset: utf8mb4
+      dbrouter:
+        master:
+          - host: 10.0.12.3
+            port: 3306
+            user: root
+            password: root
+            database: tb_test
+            # 字符集可以不写 默认 utf8mb4
+            charset: utf8mb4
+          - host: 10.0.12.3
+            port: 3306
+            user: root
+            password: root
+            database: tb_test
+            # 字符集可以不写 默认 utf8mb4
+            charset: utf8mb4
+        slave:
+          - host: 10.0.12.3
+            port: 3306
+            user: root
+            password: root
+            database: tb_test
+            # 字符集可以不写 默认 utf8mb4
+            charset: utf8mb4
+          - host: 10.0.12.3
+            port: 3306
+            user: root
+            password: root
+            database: tb_test
+            # 字符集可以不写 默认 utf8mb4
+            charset: utf8mb4
+  middleware:
+    redis:
+      standalone:
+        host: 10.0.12.3
+        port: 61001
+        # 密码可以为空
+        password: 123456
+        # 数据库可以不写 默认 0
+        database: 0
+      cluster:
+        - host: 127.0.0.1
+          port: 6379
+          password:
+        - host: 127.0.0.1
+          port: 6379
+          password:
+Production:
+  envname: production
+  datasource:
+    mysql:
+      standalone:
+        host: 10.0.12.3
+        port: 3306
+        user: root
+        password: root
+        database: tb_test
+        # 字符集可以不写 默认 utf8mb4
+        charset: utf8mb4
+      dbrouter:
+        master:
+          - host: 10.0.12.3
+            port: 3306
+            user: root
+            password: root
+            database: tb_test
+            # 字符集可以不写 默认 utf8mb4
+            charset: utf8mb4
+          - host: 10.0.12.3
+            port: 3306
+            user: root
+            password: root
+            database: tb_test
+            # 字符集可以不写 默认 utf8mb4
+            charset: utf8mb4
+        slave:
+          - host: 10.0.12.3
+            port: 3306
+            user: root
+            password: root
+            database: tb_test
+            # 字符集可以不写 默认 utf8mb4
+            charset: utf8mb4
+          - host: 10.0.12.3
+            port: 3306
+            user: root
+            password: root
+            database: tb_test
+            # 字符集可以不写 默认 utf8mb4
+            charset: utf8mb4
+  middleware:
+    redis:
+      standalone:
+        host: 10.0.12.3
+        port: 61001
+        # 密码可以为空
+        password: 123456
+        # 数据库可以不写 默认 0
+        database: 0
+      cluster:
+        - host: 127.0.0.1
+          port: 6379
+          password:
+        - host: 127.0.0.1
+          port: 6379
+          password:
