@@ -25,7 +25,7 @@ import random
 
 import pymysql
 
-from modules.journals import JournalsModuleClass
+# from modules.journals import JournalsModuleClass
 from conf import ConfigClass
 
 

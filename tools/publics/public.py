@@ -20,9 +20,6 @@ warnings.filterwarnings('ignore')
 if platform.system() == 'Windows':
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
-import time
-import random
-
 
 class PublicToolsBaseClass:
     """ 公共工具基类 """
@@ -31,9 +28,32 @@ class PublicToolsBaseClass:
         pass
 
     @property
-    def _root_path(self) -> str:
+    def root_path(self) -> str:
         """
         项目根路径
-        @return: 项目根路径: str
+        :return: 项目根路径: str
         """
         return os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+
+    def conver_slach(self, sys_path: str, paths: str = None) -> str:
+        """
+        转换路径分隔符为系统分隔符
+        :param sys_path: String 系统路径
+        :param paths: String 路径
+        :return: String 转换为系统分隔符后的系统路径
+        """
+        if paths is not None:
+            sys_path = os.path.join(sys_path, paths)
+        if platform.system() == 'Windows':
+            separator = '\\'
+        else:
+            separator = '/'
+        new_path = ''
+        for a in sys_path.split('/'):
+            if '\\' in a:
+                for b in a.split('\\'):
+                    new_path += b + separator
+            else:
+                new_path += a + separator
+
+        return new_path[:-1]

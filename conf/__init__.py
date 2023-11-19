@@ -20,12 +20,7 @@ warnings.filterwarnings('ignore')
 if platform.system() == 'Windows':
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
-import time
-import random
-
 from .configurations import ConfigClass
-
-# ConfigClass = ConfigClass()
 
 __all__ = [
     'ConfigClass'
