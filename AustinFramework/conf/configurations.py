@@ -24,32 +24,33 @@ from dotenv import load_dotenv
 import yaml
 
 from tools.publics import PublicToolsBaseClass
-from modules.journals import JournalsModuleClass
+from modules.journals import JournalModulesClass
 
 
 class BaseConfigClass(PublicToolsBaseClass):
     """ 基础配置基类 """
 
     def __init__(self):
-        super().__init__()
+        super(PublicToolsBaseClass, self).__init__()
+        self._logs = JournalModulesClass()
         self.__config_path = self.__get_config_path()
 
     def __get_config_path(self) -> str:
-        config_path = os.path.normpath(os.path.join(self._root_path, 'config.yaml'))
+        config_path = os.path.normpath(os.path.join(self.root_path, 'config.yaml'))
         if not os.path.isfile(config_path):
-            config_path = os.path.normpath(os.path.join(self._root_path, 'config.dev.yaml'))
+            config_path = os.path.normpath(os.path.join(self.root_path, 'config.dev.yaml'))
             if not os.path.isfile(config_path):
-                config_path = os.path.normpath(os.path.join(self._root_path, 'conf/config.yaml'))
+                config_path = os.path.normpath(os.path.join(self.root_path, 'conf/config.yaml'))
                 if not os.path.isfile(config_path):
-                    config_path = os.path.normpath(os.path.join(self._root_path, 'conf/config.dev.yaml'))
+                    config_path = os.path.normpath(os.path.join(self.root_path, 'conf/config.dev.yaml'))
         try:
             if os.path.isfile(config_path):
-                JournalsModuleClass.info('配置文件：{}'.format(config_path))
+                self._logs.info('配置文件：{}'.format(config_path))
                 return config_path
             else:
                 raise Exception('配置文件加载失败')
         except Exception as error:
-            JournalsModuleClass.exception(error)
+            self._logs.exception(error)
             sys.exit(1)
 
     def __base_config(self) -> dict:
@@ -60,10 +61,10 @@ class BaseConfigClass(PublicToolsBaseClass):
         try:
             with open(self.__config_path, 'r', encoding='utf8') as file:
                 read_config = yaml.safe_load(file)
-                JournalsModuleClass.info('配置文件读取成功：{}'.format(self.__config_path))
+                self._logs.info('配置文件读取成功：{}'.format(self.__config_path))
             return read_config
         except Exception as error:
-            JournalsModuleClass.exception(error)
+            self._logs.exception(error)
 
     @property
     def _base_config(self) -> dict:
@@ -74,7 +75,7 @@ class DevelopmentConfigClass(BaseConfigClass):
     """ 开发环境配置 """
 
     def __init__(self):
-        super().__init__()
+        super(BaseConfigClass, self).__init__()
 
     def _development_config(self) -> dict:
         return self._base_config.get('Development')
@@ -84,7 +85,7 @@ class TestConfigClass(BaseConfigClass):
     """ 测试环境配置 """
 
     def __init__(self):
-        super().__init__()
+        super(BaseConfigClass, self).__init__()
 
     def _test_config(self) -> dict:
         return self._base_config.get('Test')
@@ -94,7 +95,7 @@ class ProductionConfigClass(BaseConfigClass):
     """ 生产环境配置 """
 
     def __init__(self):
-        super().__init__()
+        super(BaseConfigClass, self).__init__()
 
     def _production_config(self) -> dict:
         return self._base_config.get('Production')
@@ -103,16 +104,18 @@ class ProductionConfigClass(BaseConfigClass):
 class ConfigClass(DevelopmentConfigClass, TestConfigClass, ProductionConfigClass):
 
     def __init__(self):
-        super().__init__()
+        super(DevelopmentConfigClass, self).__init__()
+        super(TestConfigClass, self).__init__()
+        super(ProductionConfigClass, self).__init__()
         load_dotenv()
         try:
             self.__run_env: str = os.getenv('RUN_ENVIRONMENT')
             if self.__run_env is None:
                 self.__run_env = 'dev'
-                JournalsModuleClass.warning('配置环境配置错误，默认使用开发环境启动项目')
-            JournalsModuleClass.info('项目运行环境：{}'.format(self.__run_env))
+                self._logs.warning('配置环境配置错误，默认使用开发环境启动项目')
+            self._logs.info('项目运行环境：{}'.format(self.__run_env))
         except Exception as error:
-            JournalsModuleClass.exception(error)
+            self._logs.exception(error)
             sys.exit(1)
 
     def __development(self) -> dict:
@@ -124,7 +127,6 @@ class ConfigClass(DevelopmentConfigClass, TestConfigClass, ProductionConfigClass
     def __production(self) -> dict:
         return self._production_config()
 
-    @property
     def config(self) -> dict:
         try:
             if self.__run_env.lower() in ['production', 'prod', 'pro', 'p']:
@@ -134,4 +136,4 @@ class ConfigClass(DevelopmentConfigClass, TestConfigClass, ProductionConfigClass
             else:
                 return self.__development()
         except Exception as error:
-            JournalsModuleClass.exception(error)
+            self._logs.exception(error)

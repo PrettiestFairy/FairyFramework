@@ -1,0 +1,11 @@
+.idea
+.venv
+*.log
+*.tar
+*.tar.gz
+*.gz
+*.tgz
+*.gzip
+*.zip
+*.rar
+

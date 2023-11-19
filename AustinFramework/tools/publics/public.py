@@ -20,9 +20,6 @@ warnings.filterwarnings('ignore')
 if platform.system() == 'Windows':
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
-import time
-import random
-
 
 class PublicToolsBaseClass:
     """ 公共工具基类 """
@@ -34,7 +31,7 @@ class PublicToolsBaseClass:
     def root_path(self) -> str:
         """
         项目根路径
-        :return: String 项目根路径
+        :return: 项目根路径: str
         """
         return os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
