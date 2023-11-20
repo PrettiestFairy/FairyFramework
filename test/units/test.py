@@ -39,7 +39,6 @@ class TestClass:
         public_tools = PublicToolsBaseClass()
         journal_modules = JournalModulesClass()
         global_config = ConfigClass()
-
         config = global_config.config()
         journal_modules.debug('运行配置：{}'.format(config))
         redis_cluster_confg = config.get('middleware').get('redis').get('cluster')
@@ -66,9 +65,9 @@ class TestClass:
         # d = mysql_db_router.query('select * from test;')
         # for i in d:
         #     print(i)
-        _redis = RedisStandaloneToolsClass()
+        # _redis = RedisStandaloneToolsClass()
         # _redis.redis_set('code', 1234)
-        d = _redis.redis_get('code')
+        # d = _redis.redis_get('code')
         return 'test_task_01 测试完成'
 
     def test_task_02(self):
