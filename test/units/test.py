@@ -19,15 +19,12 @@ warnings.filterwarnings('ignore')
 if platform.system() == 'Windows':
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
-import time
 from typing import Any
+import time
 
 from tools.publics import PublicToolsBaseClass
 from modules.journals import JournalModulesClass
 from conf import ConfigClass
-from tools.database import MySQLStandaloneToolsClass
-from tools.database import MySQLMasterSlaveDBRouterToolsClass
-from tools.middleware import RedisStandaloneToolsClass
 
 
 class TestClass:
@@ -76,7 +73,9 @@ class TestClass:
 
 if __name__ == '__main__':
     start_run_time = time.time()
-    t_cls = TestClass()
     journal_modules = JournalModulesClass()
-    journal_modules.debug(t_cls.test_task_01())
+
+    TestClass.test_task_01(TestClass)
+    # t_cls = TestClass()
+    # journal_modules.debug(t_cls.test_task_01())
     journal_modules.debug('run time: {}s'.format(time.time() - start_run_time))
