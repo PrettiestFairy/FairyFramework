@@ -29,20 +29,20 @@ from tools.publics import PublicToolsBaseClass
 class JournalModulesClass(PublicToolsBaseClass):
     """ 日志模块类 """
 
-    _instance_lock = threading.Lock()
-    _logger_instance = False
+    __instance_lock = threading.Lock()
+    __logger_instance = False
 
     def __init__(self):
         super(PublicToolsBaseClass, self).__init__()
-        self._logger_instance = True
+        self.__logger_instance = True
 
     def __new__(cls):
-        if not cls._logger_instance:
-            with cls._instance_lock:
-                if not cls._logger_instance:
-                    cls._logger_instance = super(JournalModulesClass, cls).__new__(cls)
-                    cls._logger_instance.__config_logger()
-        return cls._logger_instance.__logs
+        if not cls.__logger_instance:
+            with cls.__instance_lock:
+                if not cls.__logger_instance:
+                    cls.__logger_instance = super(JournalModulesClass, cls).__new__(cls)
+                    cls.__logger_instance.__config_logger()
+        return cls.__logger_instance.__logs
     
     def __config_logger(self):
         """
