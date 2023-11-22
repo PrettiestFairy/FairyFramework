@@ -25,7 +25,7 @@ class PublicToolsBaseClass:
     """ 公共工具基类 """
 
     def __init__(self):
-        pass
+        self.__root_path = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
     @property
     def root_path(self) -> str:
@@ -33,7 +33,7 @@ class PublicToolsBaseClass:
         项目根路径
         :return: 项目根路径: str
         """
-        return os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+        return self.__root_path
 
     def conver_slach(self, sys_path: str, paths: str = None) -> str:
         """
