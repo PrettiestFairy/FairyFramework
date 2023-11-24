@@ -16,55 +16,68 @@ import platform
 import asyncio
 
 sys.dont_write_bytecode = True
-warnings.filterwarnings('ignore')
-if platform.system() == 'Windows':
+warnings.filterwarnings("ignore")
+if platform.system() == "Windows":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 from dotenv import load_dotenv
 import yaml
 
 from tools.publics import PublicToolsBaseClass
+from tools.publics import ReadFilesError
 from modules.journals import JournalModulesClass
+
+Journal = JournalModulesClass()
 
 
 class BaseConfigClass(PublicToolsBaseClass):
-    """ 基础配置基类 """
+    """Base Configuration Base Class"""
 
     def __init__(self):
         super(PublicToolsBaseClass, self).__init__()
-        self._logs = JournalModulesClass()
         self.__config_path = self.__get_config_path()
 
     def __get_config_path(self) -> str:
-        config_path = os.path.normpath(os.path.join(self.root_path, 'config.yaml'))
+        """
+        Get the path to the configuration file
+        @return: Path to the configuration file: String
+        """
+        config_path = os.path.normpath(os.path.join(self.root_path, "config.yaml"))
         if not os.path.isfile(config_path):
-            config_path = os.path.normpath(os.path.join(self.root_path, 'config.dev.yaml'))
+            config_path = os.path.normpath(
+                os.path.join(self.root_path, "config.dev.yaml")
+            )
             if not os.path.isfile(config_path):
-                config_path = os.path.normpath(os.path.join(self.root_path, 'conf/config.yaml'))
+                config_path = os.path.normpath(
+                    os.path.join(self.root_path, "conf/config.yaml")
+                )
                 if not os.path.isfile(config_path):
-                    config_path = os.path.normpath(os.path.join(self.root_path, 'conf/config.dev.yaml'))
+                    config_path = os.path.normpath(
+                        os.path.join(self.root_path, "conf/config.dev.yaml")
+                    )
         try:
             if os.path.isfile(config_path):
-                self._logs.info('配置文件：{}'.format(config_path))
+                Journal.info("Config File: {}".format(config_path))
                 return config_path
             else:
-                raise Exception('配置文件加载失败')
+                raise ReadFilesError("Config file load error.")
         except Exception as error:
-            self._logs.exception(error)
+            Journal.exception(error)
             sys.exit(1)
 
     def __base_config(self) -> dict:
         """
-        获取配置信息
-        :return: dict 配置信息
+        Getting configuration information
+        @return: configuration information: String
         """
+
         try:
-            with open(self.__config_path, 'r', encoding='utf8') as file:
+            with open(self.__config_path, "r", encoding="utf8") as file:
                 read_config = yaml.safe_load(file)
-                self._logs.info('配置文件读取成功：{}'.format(self.__config_path))
+                Journal.info("configuration file：{}".format(self.__config_path))
             return read_config
         except Exception as error:
-            self._logs.exception(error)
+            Journal.exception(error)
 
     @property
     def _base_config(self) -> dict:
@@ -72,36 +85,37 @@ class BaseConfigClass(PublicToolsBaseClass):
 
 
 class DevelopmentConfigClass(BaseConfigClass):
-    """ 开发环境配置 """
+    """Development Environment Configuration"""
 
     def __init__(self):
         super(BaseConfigClass, self).__init__()
 
     def _development_config(self) -> dict:
-        return self._base_config.get('Development')
+        return self._base_config.get("Development")
 
 
 class TestConfigClass(BaseConfigClass):
-    """ 测试环境配置 """
+    """Test Environment Configuration"""
 
     def __init__(self):
         super(BaseConfigClass, self).__init__()
 
     def _test_config(self) -> dict:
-        return self._base_config.get('Test')
+        return self._base_config.get("Test")
 
 
 class ProductionConfigClass(BaseConfigClass):
-    """ 生产环境配置 """
+    """Production Environment Configuration"""
 
     def __init__(self):
         super(BaseConfigClass, self).__init__()
 
     def _production_config(self) -> dict:
-        return self._base_config.get('Production')
+        return self._base_config.get("Production")
 
 
 class ConfigClass(DevelopmentConfigClass, TestConfigClass, ProductionConfigClass):
+    """Configuration"""
 
     def __init__(self):
         super(DevelopmentConfigClass, self).__init__()
@@ -109,13 +123,14 @@ class ConfigClass(DevelopmentConfigClass, TestConfigClass, ProductionConfigClass
         super(ProductionConfigClass, self).__init__()
         load_dotenv()
         try:
-            self.__run_env: str = os.getenv('RUN_ENVIRONMENT')
+            self.__run_env: str = os.getenv("RUN_ENVIRONMENT")
             if self.__run_env is None:
-                self.__run_env = 'dev'
-                self._logs.warning('配置环境配置错误，默认使用开发环境启动项目')
-            self._logs.info('项目运行环境：{}'.format(self.__run_env))
+                self.__run_env = "dev"
+                Journal.warning("Configuration environment configuration error")
+                Journal.warning("Default with the development environment")
+            Journal.info("operating environment：{}".format(self.__run_env))
         except Exception as error:
-            self._logs.exception(error)
+            Journal.exception(error)
             sys.exit(1)
 
     def __development(self) -> dict:
@@ -127,13 +142,15 @@ class ConfigClass(DevelopmentConfigClass, TestConfigClass, ProductionConfigClass
     def __production(self) -> dict:
         return self._production_config()
 
+    @property
     def config(self) -> dict:
         try:
-            if self.__run_env.lower() in ['production', 'prod', 'pro', 'p']:
+            if self.__run_env.lower() in ["production", "prod", "pro", "p"]:
                 return self.__production()
-            elif self.__run_env.lower() in ['test', 't']:
+            elif self.__run_env.lower() in ["test", "t"]:
                 return self.__test()
             else:
                 return self.__development()
         except Exception as error:
-            self._logs.exception(error)
+            Journal.exception(error)
+            return self.data_dict
