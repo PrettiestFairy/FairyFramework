@@ -1,6 +1,6 @@
 # coding: utf8
 """ 
-@ File: base.py
+@ File: Journal.py
 @ Editor: PyCharm
 @ Author: Austin (From Chengdu.China) https://fairy.host
 @ HomePage: https://github.com/AustinFairyland
@@ -16,8 +16,8 @@ import platform
 import asyncio
 
 sys.dont_write_bytecode = True
-warnings.filterwarnings('ignore')
-if platform.system() == 'Windows':
+warnings.filterwarnings("ignore")
+if platform.system() == "Windows":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 from loguru import logger
@@ -26,15 +26,11 @@ import threading
 from tools.publics import PublicToolsBaseClass
 
 
-class JournalModulesClass(PublicToolsBaseClass):
-    """ 日志模块类 """
+class JournalModulesClass:
+    """Log Module Class"""
 
     __instance_lock = threading.Lock()
     __logger_instance = False
-
-    def __init__(self):
-        super(PublicToolsBaseClass, self).__init__()
-        self.__logger_instance = True
 
     def __new__(cls):
         if not cls.__logger_instance:
@@ -43,121 +39,122 @@ class JournalModulesClass(PublicToolsBaseClass):
                     cls.__logger_instance = super(JournalModulesClass, cls).__new__(cls)
                     cls.__logger_instance.__config_logger()
         return cls.__logger_instance.__logs
-    
+
     def __config_logger(self):
         """
-        logger 配置
-        @return: logger对象: logger object 
+        Logger configuration
+        @return: None
         """
-        # logs_path = PublicToolsBaseClass.conver_slach(os.path.join(PublicToolsBaseClass.root_path, 'logs/services.log'))
-        logs_path = os.path.normpath(os.path.join(self.root_path, 'logs/services.log'))
+        __public_tools = PublicToolsBaseClass()
+        logs_path = os.path.normpath(
+            os.path.join(__public_tools.root_path, "logs/services.log")
+        )
         logger.add(
             sink=logs_path,
-            rotation='10 MB',
-            retention='180 days',
+            rotation="10 MB",
+            retention="180 days",
             format="[{time:YYYY-MM-DD HH:mm:ss} | {elapsed} | {level:<8}]: {message}",
             compression="gz",
-            encoding='utf-8',
-            # level='TRACE',
-            # level='DEBUG',
-            level='INFO',
+            encoding="utf-8",
+            # level: TRACE, DEBUG, INFO, SUCCESS, WARNING, ERROR, CRITICAL
+            level="DEBUG",
             enqueue=True,
-            # colorize=True,
+            colorize=True,
             backtrace=True,
         )
 
     @property
     def __logs(self):
         """
-        私有方法 logger
-        @return: Object logger对象
+        Private method logger
+        @return: logger: Logger object
         """
         return logger
 
     @property
     def catch(self):
         """
-        继承 loguru.logger 的 catch 方法
-        @return: Object loguru.logger.catch 方法
+        Inherits the catch method from loguru.
+        @return: loguru.logger.catch
         """
         return self.__logs.catch()
 
     def trace(self, msg, *args, **kwargs):
         """
-        继承 loguru.logger 的 trace 方法
-        @param msg: String 日志信息
-        @param args: args
-        @param kwargs: kwargs
-        @return: Object loguru.logger.trace 方法
+        Inherits the trace method from loguru.
+        @param msg: Log messages: String
+        @param args: Tuple
+        @param kwargs: Dict
+        @return: loguru.logger.trace
         """
         return self.__logs.trace(msg, *args, **kwargs)
 
     def debug(self, msg, *args, **kwargs):
         """
-        继承 loguru.logger 的 debug 方法
-        @param msg: String 日志信息
-        @param args: args
-        @param kwargs: kwargs
-        @return: Object loguru.logger.debug 方法
+        Inherits the debug method from loguru.logger.
+        @param msg: Debug Log messages: String
+        @param args: Tuple
+        @param kwargs: Dict
+        @return: loguru.logger.debug
         """
         return self.__logs.debug(msg, *args, **kwargs)
 
     def info(self, msg, *args, **kwargs):
         """
-        继承 loguru.logger 的 info 方法
-        @param msg: String 日志信息
-        @param args: args
-        @param kwargs: kwargs
-        @return: Object loguru.logger.info 方法
+        Inherits the info method from loguru.
+        @param msg: Info Log messages: String
+        @param args: Tuple
+        @param kwargs: Dict
+        @return: loguru.logger.info
         """
         return self.__logs.info(msg, *args, **kwargs)
 
     def success(self, msg, *args, **kwargs):
         """
-        继承 loguru.logger 的 success 方法
-        @param msg: String 日志信息
-        @param args: args
-        @param kwargs: kwargs
-        @return: Object loguru.logger.success 方法
+        Inherits the success method from loguru.
+        @param msg: Success Log messages: String
+        @param args: Tuple
+        @param kwargs: Dict
+        @return: loguru.logger.success
         """
         return self.__logs.success(msg, *args, **kwargs)
 
     def warning(self, msg, *args, **kwargs):
         """
-        继承 loguru.logger 的 warning 方法
-        @param msg: String 日志信息
-        @param args: args
-        @param kwargs: kwargs
-        @return: Object loguru.logger.warning 方法
+        Inherits the warning method from loguru.
+        @param msg: Warning Log messages: String
+        @param args: Tuple
+        @param kwargs: Dict
+        @return: loguru.logger.warning
         """
         return self.__logs.warning(msg, *args, **kwargs)
 
     def error(self, msg, *args, **kwargs):
         """
-        继承 loguru.logger 的 error 方法
-        @param msg: String 日志信息
-        @param args: args
-        @param kwargs: kwargs
-        @return: Object loguru.logger.error 方法
+        Inherits the error method from loguru.
+        @param msg: Error Log messages: String
+        @param args: Tuple
+        @param kwargs: Dict
+        @return: loguru.logger.error
         """
         return self.__logs.error(msg, *args, **kwargs)
 
     def critical(self, msg, *args, **kwargs):
         """
-        继承 loguru.logger 的 critical 方法
-        @param msg: String 日志信息
-        @param args: args
-        @param kwargs: kwargs
-        @return: Object loguru.logger.critical 方法
+        Inherits the critical method from loguru.
+        @param msg: Critical Log messages: String
+        @param args: Tuple
+        @param kwargs: Dict
+        @return: loguru.logger.critical
         """
         return self.__logs.critical(msg, *args, **kwargs)
 
     def exception(self, msg, *args, **kwargs):
         """
-        继承 loguru.logger 的 exception 方法
-        @param msg: String 日志信息
-        @param args: args
-        @param kwargs: kwargs
-        @return: Object loguru.logger.exception 方法
+        Inherits the exception method from loguru.
+        @param msg: Exception Log messages: String
+        @param args: Tuple
+        @param kwargs: Dict
+        @return: loguru.logger.exception
         """
         return self.__logs.exception(msg, *args, **kwargs)

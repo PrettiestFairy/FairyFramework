@@ -1,11 +1,11 @@
 # coding: utf8
-""" 
-@ File: __init__.py
+"""
+@ File: exceptional.py
 @ Editor: PyCharm
 @ Author: Austin (From Chengdu.China) https://fairy.host
 @ HomePage: https://github.com/AustinFairyland
-@ OS: Windows 11 Professional Workstation 22H2
-@ CreatedTime: 2023-09-11
+@ OS: Linux Ubunut 22.04.4 Kernel 6.2.0-36-generic 
+@ CreatedTime: 2023/11/25
 """
 from __future__ import annotations
 
@@ -19,9 +19,18 @@ warnings.filterwarnings("ignore")
 if platform.system() == "Windows":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
-from .public import PublicToolsBaseClass
-from .exceptional import ReadFilesError
-from .exceptional import MySQLSourceError
-from .exceptional import ParamsError
 
-__all__ = ["PublicToolsBaseClass", "ReadFilesError", "MySQLSourceError", "ParamsError"]
+class ProjectError(Exception):
+    pass
+
+
+class ParamsError(ProjectError):
+    pass
+
+
+class ReadFilesError(ProjectError):
+    pass
+
+
+class MySQLSourceError(ProjectError):
+    pass

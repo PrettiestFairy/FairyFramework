@@ -1,6 +1,6 @@
 # coding: utf8
 """ 
-@ File: base.py
+@ File: public.py
 @ Editor: PyCharm
 @ Author: Austin (From Chengdu.China) https://fairy.host
 @ HomePage: https://github.com/AustinFairyland
@@ -16,16 +16,31 @@ import platform
 import asyncio
 
 sys.dont_write_bytecode = True
-warnings.filterwarnings('ignore')
-if platform.system() == 'Windows':
+warnings.filterwarnings("ignore")
+if platform.system() == "Windows":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 
 class PublicToolsBaseClass:
-    """ 公共工具基类 """
+    """公共工具基类"""
 
     def __init__(self):
-        self.__root_path = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+        self.__root_path = os.path.abspath(
+            os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        )
+        self.__api_results = {"status": "failure", "code": 500, "data": None}
+        self.__data_string = str()
+        self.__data_integer = int()
+        self.__data_float = float()
+        self.__data_boolean = bool()
+        self.__data_list = list()
+        self.__data_tuple = tuple()
+        self.__data_set = set()
+        self.__data_dict = dict()
+        self.__data_none = None
+        self.__data_byte = bytes()
+        self.__data_bytearray = bytearray()
+        self.__data_complex = complex()
 
     @property
     def root_path(self) -> str:
@@ -35,25 +50,54 @@ class PublicToolsBaseClass:
         """
         return self.__root_path
 
-    def conver_slach(self, sys_path: str, paths: str = None) -> str:
-        """
-        转换路径分隔符为系统分隔符
-        :param sys_path: String 系统路径
-        :param paths: String 路径
-        :return: String 转换为系统分隔符后的系统路径
-        """
-        if paths is not None:
-            sys_path = os.path.join(sys_path, paths)
-        if platform.system() == 'Windows':
-            separator = '\\'
-        else:
-            separator = '/'
-        new_path = ''
-        for a in sys_path.split('/'):
-            if '\\' in a:
-                for b in a.split('\\'):
-                    new_path += b + separator
-            else:
-                new_path += a + separator
+    @property
+    def api_result(self):
+        return self.__api_results
 
-        return new_path[:-1]
+    @property
+    def data_string(self):
+        return self.__data_string
+
+    @property
+    def data_integer(self):
+        return self.__data_integer
+
+    @property
+    def data_float(self):
+        return self.__data_float
+
+    @property
+    def data_boolean(self):
+        return self.__data_boolean
+
+    @property
+    def data_list(self):
+        return self.__data_list
+
+    @property
+    def data_tuple(self):
+        return self.__data_tuple
+
+    @property
+    def data_set(self):
+        return self.__data_set
+
+    @property
+    def data_dict(self):
+        return self.__data_dict
+
+    @property
+    def data_none(self):
+        return self.__data_none
+
+    @property
+    def data_byte(self):
+        return self.__data_byte
+
+    @property
+    def data_bytearray(self):
+        return self.__data_bytearray
+
+    @property
+    def data_complex(self):
+        return self.__data_complex
