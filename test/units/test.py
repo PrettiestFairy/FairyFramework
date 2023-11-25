@@ -22,11 +22,8 @@ if platform.system() == "Windows":
 import time
 
 from tools.publics import PublicToolsBaseClass
-from conf import ConfigClass
-from modules.journals import JournalModulesClass
-
-Journal = JournalModulesClass()
-Config = ConfigClass()
+from common.instantiation import JournalModules
+from common.instantiation import Config
 
 
 class TestClass(PublicToolsBaseClass):
@@ -34,11 +31,11 @@ class TestClass(PublicToolsBaseClass):
         super().__init__()
 
     def test_task_01(self):
-        Journal.info("test_task_01 开始测试")
-        Journal.debug("开始输出配置信息")
-        Journal.debug(Config.config)
+        JournalModules.info("test_task_01 开始测试")
+        JournalModules.debug("开始输出配置信息")
+        JournalModules.debug(Config.config)
 
-        Journal.success("test_task_01 测试完成")
+        JournalModules.success("test_task_01 测试完成")
 
 
 if __name__ == "__main__":
@@ -47,4 +44,4 @@ if __name__ == "__main__":
     ts = TestClass()
     ts.test_task_01()
 
-    Journal.success("Run Times: {}s".format(time.time() - start_run_time))
+    JournalModules.success("Run Times: {}s".format(time.time() - start_run_time))
