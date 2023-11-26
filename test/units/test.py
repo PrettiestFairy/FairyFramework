@@ -22,26 +22,59 @@ if platform.system() == "Windows":
 import time
 
 from tools.publics import PublicToolsBaseClass
-from common.instantiation import JournalModules
-from common.instantiation import Config
+from modules.journals import InitJournalModulesClass
+from conf import InitConfigClass
+from modules.decorator import TimingDecorator
+from tools.publics import InitDateTimeClass
 
 
 class TestClass(PublicToolsBaseClass):
     def __init__(self):
-        super().__init__()
+        super(PublicToolsBaseClass, self).__init__()
 
+    @TimingDecorator()
     def test_task_01(self):
-        JournalModules.info("test_task_01 开始测试")
-        JournalModules.debug("开始输出配置信息")
-        JournalModules.debug(Config.config)
+        def __kv(items):
+            if isinstance(items, dict):
+                for key, value in items.items():
+                    if isinstance(value, dict):
+                        InitJournalModulesClass.journal.debug((key, value))
+                        __kv(value)
+                    else:
+                        InitJournalModulesClass.journal.debug((key, value))
 
-        JournalModules.success("test_task_01 测试完成")
+        InitJournalModulesClass.journal.info("Start Test Task")
+        InitJournalModulesClass.journal.debug("Config")
+        for key, value in InitConfigClass.config.config.items():
+            if isinstance(value, dict):
+                InitJournalModulesClass.journal.debug((key, value))
+                __kv(value)
+            else:
+                InitJournalModulesClass.journal.debug((key, value))
+
+        InitJournalModulesClass.journal.success("Tast Task Done")
+        return True
+
+    @TimingDecorator()
+    def test2(self):
+        InitJournalModulesClass.journal.debug(
+            (
+                InitDateTimeClass.datetimes.normtimestamp(),
+                InitDateTimeClass.datetimes.normdatetime(),
+                len(InitDateTimeClass.datetimes.normtimestamp().__str__()),
+                InitDateTimeClass.datetimes.timestamp_nbit(20),
+                InitDateTimeClass.datetimes.timestamp_dt("2023-01-01 00:00:00"),
+                InitDateTimeClass.datetimes.datetime_ts(1672502400),
+            )
+        )
+
+
+def main(*args, **kwargs):
+    tcls = TestClass()
+
+    # tcls.test_task_01()
+    tcls.test2()
 
 
 if __name__ == "__main__":
-    start_run_time = time.time()
-
-    ts = TestClass()
-    ts.test_task_01()
-
-    JournalModules.success("Run Times: {}s".format(time.time() - start_run_time))
+    main()

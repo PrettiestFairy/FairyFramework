@@ -16,12 +16,15 @@ import platform
 import asyncio
 
 sys.dont_write_bytecode = True
-warnings.filterwarnings('ignore')
-if platform.system() == 'Windows':
+warnings.filterwarnings("ignore")
+if platform.system() == "Windows":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 from .configurations import ConfigClass
 
-__all__ = [
-    'ConfigClass'
-]
+
+class InitConfigClass:
+    config = ConfigClass()
+
+
+__all__ = ["InitConfigClass", "ConfigClass"]

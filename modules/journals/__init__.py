@@ -16,12 +16,15 @@ import platform
 import asyncio
 
 sys.dont_write_bytecode = True
-warnings.filterwarnings('ignore')
-if platform.system() == 'Windows':
+warnings.filterwarnings("ignore")
+if platform.system() == "Windows":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 from .journal import JournalModulesClass
 
-__all__ = [
-    'JournalModulesClass'
-]
+
+class InitJournalModulesClass:
+    journal = JournalModulesClass()
+
+
+__all__ = ["InitJournalModulesClass", "JournalModulesClass"]
