@@ -26,7 +26,7 @@ from tools.publics import MySQLSourceError
 from tools.publics import ParamsError
 
 from modules.journals import InitJournalModulesClass
-from conf import InitConfigClass
+from modules.configuration import InitConfigClass
 
 
 class MySQLStandaloneToolsClass:

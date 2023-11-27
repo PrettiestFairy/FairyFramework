@@ -43,7 +43,7 @@ class BaseConfigClass(PublicToolsBaseClass):
         config_path = os.path.normpath(os.path.join(self.root_path, "config.yaml"))
         if not os.path.isfile(config_path):
             config_path = os.path.normpath(
-                os.path.join(self.root_path, "config.dev.yaml")
+                os.path.join(self.root_path, "../../conf/config.dev.yaml")
             )
             if not os.path.isfile(config_path):
                 config_path = os.path.normpath(

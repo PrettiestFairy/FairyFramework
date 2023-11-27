@@ -25,7 +25,7 @@ from rediscluster import RedisCluster
 from rediscluster.connection import ClusterConnectionPool
 
 from modules.journals import InitJournalModulesClass
-from conf import InitConfigClass
+from modules.configuration import InitConfigClass
 
 
 class RedisStandaloneToolsClass:

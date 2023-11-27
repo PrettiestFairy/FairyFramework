@@ -26,6 +26,8 @@ from datetime import datetime
 import time
 import re
 
+from .exceptional import ParamsError
+
 
 class DateTimeClass:
     @staticmethod
@@ -72,7 +74,6 @@ class DateTimeClass:
         @param fmt: At least 14-bits of time and date: String
         @return: Standard 10-bit timestamp: Integer
         """
-        results = time.time().__int__()
         if fmt:
             data_string = "".join(re.findall(r"\d+", fmt))
             if data_string.__len__() == 14:
@@ -87,6 +88,10 @@ class DateTimeClass:
                 results = (
                     datetime.strptime(fmt, "%Y-%m-%d %H:%M:%S").timestamp().__int__()
                 )
+            else:
+                raise ParamsError
+        else:
+            results = time.time().__int__()
         return results
 
     @staticmethod
@@ -97,7 +102,8 @@ class DateTimeClass:
         @param fmt: Fmt datetime, default: %Y-%m-%d %H:%M:%S: String
         @return: Fmt datetime: String
         """
-        results = datetime.now().strftime(fmt)
         if timestamp:
             results = datetime.fromtimestamp(timestamp).strftime(fmt)
+        else:
+            results = datetime.now().strftime(fmt)
         return results
