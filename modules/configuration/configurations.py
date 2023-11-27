@@ -24,10 +24,8 @@ from dotenv import load_dotenv
 import yaml
 
 from tools.publics import PublicToolsBaseClass
+from modules.journals import InitJournalModulesClass
 from tools.publics import ReadFilesError
-from modules.journals import JournalModulesClass
-
-Journal = JournalModulesClass()
 
 
 class BaseConfigClass(PublicToolsBaseClass):
@@ -45,7 +43,7 @@ class BaseConfigClass(PublicToolsBaseClass):
         config_path = os.path.normpath(os.path.join(self.root_path, "config.yaml"))
         if not os.path.isfile(config_path):
             config_path = os.path.normpath(
-                os.path.join(self.root_path, "config.dev.yaml")
+                os.path.join(self.root_path, "../../conf/config.dev.yaml")
             )
             if not os.path.isfile(config_path):
                 config_path = os.path.normpath(
@@ -57,12 +55,14 @@ class BaseConfigClass(PublicToolsBaseClass):
                     )
         try:
             if os.path.isfile(config_path):
-                Journal.info("Config File: {}".format(config_path))
+                InitJournalModulesClass.journal.info(
+                    "Config File: {}".format(config_path)
+                )
                 return config_path
             else:
                 raise ReadFilesError("Config file load error.")
         except Exception as error:
-            Journal.exception(error)
+            InitJournalModulesClass.journal.exception(error)
             sys.exit(1)
 
     def __base_config(self) -> dict:
@@ -74,10 +74,12 @@ class BaseConfigClass(PublicToolsBaseClass):
         try:
             with open(self.__config_path, "r", encoding="utf8") as file:
                 read_config = yaml.safe_load(file)
-                Journal.info("configuration file：{}".format(self.__config_path))
+                InitJournalModulesClass.journal.info(
+                    "configuration file：{}".format(self.__config_path)
+                )
             return read_config
         except Exception as error:
-            Journal.exception(error)
+            InitJournalModulesClass.journal.exception(error)
 
     @property
     def _base_config(self) -> dict:
@@ -126,11 +128,15 @@ class ConfigClass(DevelopmentConfigClass, TestConfigClass, ProductionConfigClass
             self.__run_env: str = os.getenv("RUN_ENVIRONMENT")
             if self.__run_env is None:
                 self.__run_env = "dev"
-                Journal.warning("Configuration environment configuration error")
-                Journal.warning("Default with the development environment")
-            Journal.info("operating environment：{}".format(self.__run_env))
+                InitJournalModulesClass.journal.warning(
+                    "Configuration environment configuration error"
+                    "Default with the development environment."
+                )
+            InitJournalModulesClass.journal.info(
+                "operating environment：{}".format(self.__run_env)
+            )
         except Exception as error:
-            Journal.exception(error)
+            InitJournalModulesClass.journal.exception(error)
             sys.exit(1)
 
     def __development(self) -> dict:
@@ -152,5 +158,5 @@ class ConfigClass(DevelopmentConfigClass, TestConfigClass, ProductionConfigClass
             else:
                 return self.__development()
         except Exception as error:
-            Journal.exception(error)
+            InitJournalModulesClass.journal.exception(error)
             return self.data_dict
