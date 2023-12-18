@@ -146,14 +146,26 @@ class TestClass(PublicToolsBaseClass):
         )
 
 
+class TestClass02:
+    """Test"""
+
+    def __str__(self):
+        results = "Str - TestClass2"
+        return results
+
+    def t_1(self):
+        results = True
+        return results
+
+    @classmethod
+    def t1(cls):
+        print(cls.__name__)
+
+
 def main(*args, **kwargs):
-    tcls = TestClass()
-
-    # tcls.test_task_01()
-    # tcls.test2()
-
-    tcls.test7()
+    TestClass02.t1()
+    return True
 
 
 if __name__ == "__main__":
-    main()
+    print(main())
