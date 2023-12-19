@@ -28,19 +28,6 @@ class PublicToolsBaseClass:
         self.__root_path = os.path.abspath(
             os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
         )
-        self.__api_results = {"status": "failure", "code": 500, "data": None}
-        self.__data_string = str()
-        self.__data_integer = int()
-        self.__data_float = float()
-        self.__data_boolean = bool()
-        self.__data_list = list()
-        self.__data_tuple = tuple()
-        self.__data_set = set()
-        self.__data_dict = dict()
-        self.__data_none = None
-        self.__data_byte = bytes()
-        self.__data_bytearray = bytearray()
-        self.__data_complex = complex()
 
     @property
     def root_path(self) -> str:
@@ -50,54 +37,66 @@ class PublicToolsBaseClass:
         """
         return self.__root_path
 
-    @property
-    def api_result(self):
-        return self.__api_results
+    @staticmethod
+    def api_results():
+        results = {"status": "failure", "code": 500, "data": None}
+        return results
 
-    @property
-    def data_string(self):
-        return self.__data_string
+    @staticmethod
+    def data_string():
+        results = str()
+        return results
 
-    @property
-    def data_integer(self):
-        return self.__data_integer
+    @staticmethod
+    def data_integer():
+        results = int()
+        return results
 
-    @property
-    def data_float(self):
-        return self.__data_float
+    @staticmethod
+    def data_float():
+        results = float()
+        return results
 
-    @property
-    def data_boolean(self):
-        return self.__data_boolean
+    @staticmethod
+    def data_boolean():
+        results = bool()
+        return results
 
-    @property
-    def data_list(self):
-        return self.__data_list
+    @staticmethod
+    def data_list():
+        results = list()
+        return results
 
-    @property
-    def data_tuple(self):
-        return self.__data_tuple
+    @staticmethod
+    def data_tuple():
+        results = tuple()
+        return results
 
-    @property
-    def data_set(self):
-        return self.__data_set
+    @staticmethod
+    def data_set():
+        results = set()
+        return results
 
-    @property
-    def data_dict(self):
-        return self.__data_dict
+    @staticmethod
+    def data_dict():
+        results = dict()
+        return results
 
-    @property
-    def data_none(self):
-        return self.__data_none
+    @staticmethod
+    def data_none():
+        return None
 
-    @property
-    def data_byte(self):
-        return self.__data_byte
+    @staticmethod
+    def data_byte():
+        results = bytes()
+        return results
 
-    @property
-    def data_bytearray(self):
-        return self.__data_bytearray
+    @staticmethod
+    def data_bytearray():
+        results = bytearray()
+        return results
 
-    @property
-    def data_complex(self):
-        return self.__data_complex
+    @staticmethod
+    def data_complex():
+        results = complex()
+        return results
