@@ -27,4 +27,7 @@ class InitJournalModulesClass:
     journal = JournalModulesClass()
 
 
-__all__ = ["InitJournalModulesClass", "JournalModulesClass"]
+__all__ = [
+    "InitJournalModulesClass",
+    "JournalModulesClass",
+]
