@@ -108,7 +108,9 @@ class SQLStatement:
         return results
 
     @staticmethod
-    def group_by_clause(field: Union[str, list[str], tuple[str], set[str]]) -> str:
+    def group_by_clause(
+        field: Union[str, list[str], tuple[str], set[str], None] = None
+    ) -> str:
         if not filter:
             results = ""
         if not isinstance(field, (list, tuple, set)):
@@ -122,7 +124,9 @@ class SQLStatement:
         return results
 
     @staticmethod
-    def having_clause(field: Union[str, list[str], tuple[str], set[str]]) -> str:
+    def having_clause(
+        field: Union[str, list[str], tuple[str], set[str], None] = None
+    ) -> str:
         if not filter:
             results = ""
         if not isinstance(field, (list, tuple, set)):
