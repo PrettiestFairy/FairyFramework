@@ -26,9 +26,14 @@ class SQLStatement:
         if not isinstance(field_name, str):
             raise TypeError
         if isinstance(field_value, str):
-            results = "{} {} {} '{}'".format(
-                filter_name, field_name, field_operation, field_value
-            )
+            if field_operation in ("like", "ilike"):
+                results = "{} {} {} '%{}%'".format(
+                    filter_name, field_name, field_operation, field_value
+                )
+            else:
+                results = "{} {} {} '{}'".format(
+                    filter_name, field_name, field_operation, field_value
+                )
         else:
             results = "{} {} {} {}".format(
                 filter_name, field_name, field_operation, field_value
