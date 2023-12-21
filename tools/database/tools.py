@@ -111,7 +111,7 @@ class SQLStatement:
     def group_by_clause(
         field: Union[str, list[str], tuple[str], set[str], None] = None
     ) -> str:
-        if not filter:
+        if not field:
             return str()
         if not isinstance(field, (list, tuple, set)):
             if not isinstance(field, str):
@@ -127,7 +127,7 @@ class SQLStatement:
     def having_clause(
         field: Union[str, list[str], tuple[str], set[str], None] = None
     ) -> str:
-        if not filter:
+        if not field:
             return str()
         if not isinstance(field, (list, tuple, set)):
             if not isinstance(field, str):
