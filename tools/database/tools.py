@@ -23,6 +23,72 @@ from typing import Union
 
 
 class SQLStatement:
+    def __init__(
+        self,
+        database_name: Union[str, None] = None,
+        schema_name: Union[str, None] = None,
+        table_name: Union[str, None] = None,
+    ):
+        self.__database_name = database_name
+        self.__schema_name = schema_name
+        self.__table_name = table_name
+        __check_state, __check_db_name = self.__check_initialization()
+        if not __check_state:
+            raise ValueError("Initialization failure, parameter error.")
+        else:
+            self.__db_name = __check_db_name
+
+    @property
+    def database_name(self):
+        return self.__db_name
+
+    @property
+    def schema_name(self):
+        return self.__db_name
+
+    def __check_initialization(self):
+        state, db_name = False, None
+        if not self.__database_name:
+            if not self.__schema_name:
+                state = False
+                db_name = None
+            else:
+                state = True
+                db_name = self.__schema_name
+        else:
+            if not self.__schema_name:
+                state = True
+                db_name = self.__database_name
+            else:
+                state = False
+                db_name = None
+        return state, db_name
+
+    def __select_clause(
+        self,
+        table_name: Union[str, None] = None,
+        field: Union[str, list[str], tuple[str], set[str], None] = None,
+    ) -> str:
+        if self.__table_name:
+            table_name = self.__table_name
+        else:
+            if not table_name:
+                raise ValueError
+        if not field:
+            field = "*"
+        else:
+            if not isinstance(field, (list, tuple, set)):
+                if not isinstance(field, str):
+                    raise TypeError
+            else:
+                field = " ".join(field)
+        select_str = "{}.{}.{}".format(self.database_name, table_name, field)
+        results = " ".join(("select", select_str))
+        return results
+    
+    def select_clause_example(self):
+        return self.__select_clause
+
     @staticmethod
     def select_clause(
         field_iterable: Union[str, list[str], tuple[str], set[str], None] = None
