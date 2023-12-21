@@ -92,15 +92,12 @@ class SQLStatement:
 
     @staticmethod
     def where_clause(
-        filter_iterable: Union[str, list[str], tuple[str], set[str], None] = None
+        filter_iterable: Union[list[str], tuple[str], set[str], None] = None
     ) -> str:
         if not filter_iterable:
             return str()
         if not isinstance(filter_iterable, (list, tuple, set)):
-            if not isinstance(filter_iterable, str):
-                raise TypeError
-            else:
-                results = "where {}".format(filter_iterable)
+            raise TypeError
         else:
-            results = " ".join(filter_iterable)
+            results = " ".join(("where", " ".join(filter_iterable).split()[1:]))
         return results
