@@ -99,7 +99,38 @@ class SQLStatement:
         if not isinstance(filter_iterable, (list, tuple, set)):
             raise TypeError
         else:
-            results = " ".join(
-                ("where", " ".join(" ".join(filter_iterable).split()[1:]))
-            )
+            split_list = " ".join(filter_iterable).split()
+            if split_list[0] in ("not", "and", "or"):
+                filter_str = " ".join(split_list[1:])
+                results = " ".join(("where", filter_str))
+            else:
+                raise ValueError
+        return results
+
+    @staticmethod
+    def group_by_clause(field: Union[str, list[str], tuple[str], set[str]]) -> str:
+        if not filter:
+            results = ""
+        if not isinstance(field, (list, tuple, set)):
+            if not isinstance(field, str):
+                raise TypeError
+            else:
+                results = "group by {}".format(field)
+        else:
+            field_str = ", ".join(field)
+            results = " ".join(("group by", field_str))
+        return results
+
+    @staticmethod
+    def having_clause(field: Union[str, list[str], tuple[str], set[str]]) -> str:
+        if not filter:
+            results = ""
+        if not isinstance(field, (list, tuple, set)):
+            if not isinstance(field, str):
+                raise TypeError
+            else:
+                results = "having {}".format(field)
+        else:
+            field_str = ", ".join(field)
+            results = " ".join(("having", field_str))
         return results
