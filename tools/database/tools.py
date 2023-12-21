@@ -99,5 +99,7 @@ class SQLStatement:
         if not isinstance(filter_iterable, (list, tuple, set)):
             raise TypeError
         else:
-            results = " ".join(("where", " ".join(filter_iterable).split()[1:]))
+            results = " ".join(
+                ("where", " ".join(" ".join(filter_iterable).split()[1:]))
+            )
         return results
