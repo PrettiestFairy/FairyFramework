@@ -35,9 +35,12 @@ class SQLStatement:
                     filter_name, field_name, field_operation, field_value
                 )
         else:
-            results = "{} {} {} {}".format(
-                filter_name, field_name, field_operation, field_value
-            )
+            if field_operation in ("like", "ilike"):
+                raise SyntaxError
+            else:
+                results = "{} {} {} '{}'".format(
+                    filter_name, field_name, field_operation, field_value
+                )
         return results
 
     @staticmethod
