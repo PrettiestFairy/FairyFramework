@@ -31,7 +31,7 @@ import hashlib
 
 class TestClass(PublicToolsBaseClass):
     def __init__(self):
-        super(PublicToolsBaseClass, self).__init__()
+        PublicToolsBaseClass.__init__(self)
 
     @TimingDecorator()
     def test_task_01(self):
@@ -141,19 +141,36 @@ class TestClass(PublicToolsBaseClass):
         print(pwd_2, type(pwd_2))
         print(
             len(
-                "b2e14e1f3778dfcb0d92cba02c6efd211e654762d0389337d0a95d76ce18b9b32d7f3b00f02b3bb39d85dcf0c900693709c96e580cb5b482eeff604ee44dc1e1c6c4bc42c4a6f9dd6e5f0971da8885d6379b4e18"
+                "b2e14e1f3778dfcb0d92cba02c6efd211e654762d0389337d0a95d76ce18b9b32d7f3b00"
+                "f02b3bb39d85dcf0c900693709c96e580cb5b482eeff604ee44dc1e1c6c4bc42c4a6f9dd6e5f0971da8885d6379b4e18"
             )
         )
+        
+
+
+class TestClass02:
+    """Test"""
+
+    def __str__(self):
+        results = "Str - TestClass2"
+        return results
+
+    def t_1(self):
+        results = True
+        return results
+    
+    @staticmethod
+    def t_2():
+        tc = TestClass()
+        s1 = tc.api_results()
+        s2 = tc.root_path
+        print(s1, s2)
 
 
 def main(*args, **kwargs):
-    tcls = TestClass()
-
-    # tcls.test_task_01()
-    # tcls.test2()
-
-    tcls.test7()
+    print(TestClass02.t_2())
+    return True
 
 
 if __name__ == "__main__":
-    main()
+    print(main())
