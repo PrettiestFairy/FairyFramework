@@ -112,7 +112,7 @@ class SQLStatement:
         field: Union[str, list[str], tuple[str], set[str], None] = None
     ) -> str:
         if not filter:
-            results = ""
+            return str()
         if not isinstance(field, (list, tuple, set)):
             if not isinstance(field, str):
                 raise TypeError
@@ -128,7 +128,7 @@ class SQLStatement:
         field: Union[str, list[str], tuple[str], set[str], None] = None
     ) -> str:
         if not filter:
-            results = ""
+            return str()
         if not isinstance(field, (list, tuple, set)):
             if not isinstance(field, str):
                 raise TypeError
