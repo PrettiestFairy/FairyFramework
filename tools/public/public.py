@@ -24,17 +24,13 @@ if platform.system() == "Windows":
 class PublicToolsBaseClass:
     """公共工具基类"""
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         self.__root_path = os.path.abspath(
             os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
         )
 
     @property
     def root_path(self) -> str:
-        """
-        项目根路径
-        :return: 项目根路径: str
-        """
         return self.__root_path
 
     @staticmethod

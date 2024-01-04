@@ -24,25 +24,21 @@ from redis import Redis
 from rediscluster import RedisCluster
 from rediscluster.connection import ClusterConnectionPool
 
-from modules.journals import InitJournalModulesClass
-from modules.configuration import InitConfigClass
+from modules.inheritance import BaseClass
 
 
-class RedisStandaloneToolsClass:
+class RedisStandaloneToolsClass(BaseClass):
     """Redis Single Node Tool Class"""
 
-    def __init__(self):
-        InitJournalModulesClass.journal.debug(
-            "Initialization class：{}".format(self.__class__.__name__)
-        )
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.debug("Initialization class：{}".format(self.__class__.__name__))
         try:
             self.__redis_config: dict = (
-                InitConfigClass.config.config.get("middleware")
-                .get("redis")
-                .get("standalone")
+                self.config.get("middleware").get("redis").get("standalone")
             )
         except Exception as error:
-            InitJournalModulesClass.journal.exception(error)
+            self.exception(error)
             sys.exit(1)
 
     @property
@@ -65,10 +61,10 @@ class RedisStandaloneToolsClass:
                 max_connections=10,
             )
             conn = Redis(connection_pool=pool)
-            InitJournalModulesClass.journal.debug("Redis Server Connection Successful")
+            self.debug("Redis Server Connection Successful")
             return conn
         except Exception as error:
-            InitJournalModulesClass.journal.exception(error)
+            self.exception(error)
             sys.exit(1)
 
     def redis_set(self, k, v):
@@ -83,7 +79,7 @@ class RedisStandaloneToolsClass:
             conn.set(k, v)
             return True
         except Exception as error:
-            InitJournalModulesClass.journal.exception(error)
+            self.exception(error)
         finally:
             conn.connection_pool.disconnect()
 
@@ -96,39 +92,32 @@ class RedisStandaloneToolsClass:
         conn = self.__redis_connect
         try:
             v = conn.get(k)
-            InitJournalModulesClass.journal.debug(
-                "Redis Fetches Data Successfully： key：{}， value：{}".format(k, v)
-            )
+            self.debug("Redis Fetches Data Successfully： key：{}， value：{}".format(k, v))
             return v
         except Exception as error:
-            InitJournalModulesClass.journal.exception(error)
+            self.exception(error)
         finally:
             conn.connection_pool.disconnect()
 
 
-class RedisClusterToolsClass:
+class RedisClusterToolsClass(BaseClass):
     """Redis 集群工具类"""
 
-    def __init__(self):
-        InitJournalModulesClass.journal.debug(
-            "Initialization class：{}".format(self.__class__.__name__)
-        )
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.debug("Initialization class：{}".format(self.__class__.__name__))
         try:
             self.__redis_config: list = (
-                InitConfigClass.config.config.get("middleware")
-                .get("redis")
-                .get("cluster")
+                self.config.get("middleware").get("redis").get("cluster")
             )
         except Exception as error:
-            InitJournalModulesClass.journal.exception(error)
+            self.exception(error)
 
     @property
     def __redis_cluster_connect(self):
         try:
             redis_cluster_confg = (
-                InitConfigClass.config.config.get("middleware")
-                .get("redis")
-                .get("cluster")
+                self.config.get("middleware").get("redis").get("cluster")
             )
             startup_nodes = []
             __password_map = {}
@@ -139,9 +128,7 @@ class RedisClusterToolsClass:
                 __password = standalone_confg.get("password")
                 startup_nodes.append({"host": __host, "port": __port})
                 __password_map["{}:{}".format(__host, __port)] = __password
-            InitJournalModulesClass.journal.debug(
-                "Redis Connection Pool Data Sources：{}".format(startup_nodes)
-            )
+            self.debug("Redis Connection Pool Data Sources：{}".format(startup_nodes))
             pool = ClusterConnectionPool(
                 startup_nodes=startup_nodes,
                 password_map=__password_map,
@@ -149,21 +136,21 @@ class RedisClusterToolsClass:
                 decode_responses=True,
             )
             conn = RedisCluster(connection_pool=pool)
-            InitJournalModulesClass.journal.debug("Redis Cluster Connection Successful")
+            self.debug("Redis Cluster Connection Successful")
             return conn
         except Exception as error:
-            InitJournalModulesClass.journal.error("Redis Cluster Connection Failure")
-            InitJournalModulesClass.journal.exception(error)
+            self.error("Redis Cluster Connection Failure")
+            self.exception(error)
 
     def redis_get(self, k):
         conn = self.__redis_cluster_connect
         try:
             value = conn.get(k)
-            InitJournalModulesClass.journal.debug(
+            self.debug(
                 "Redis Fetches Data Successfully：key：{}，value：{}".format(k, value)
             )
             return value
         except Exception as error:
-            InitJournalModulesClass.journal.exception(error)
+            self.exception(error)
         finally:
             conn.connection_pool.disconnect()

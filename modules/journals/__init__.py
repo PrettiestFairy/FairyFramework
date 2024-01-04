@@ -22,12 +22,6 @@ if platform.system() == "Windows":
 
 from .journal import JournalModulesClass
 
-
-class InitJournalModulesClass:
-    journal = JournalModulesClass()
-
-
 __all__ = [
-    "InitJournalModulesClass",
     "JournalModulesClass",
 ]
