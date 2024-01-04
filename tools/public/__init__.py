@@ -25,19 +25,9 @@ from .exceptional import ReadFilesError
 from .exceptional import MySQLSourceError
 from .exceptional import ParamsError
 
-
-class InitPublicToolsBaseClass:
-    public = PublicToolsBaseClass()
-
-
-class InitDateTimeClass:
-    datetimes = DateTimeClass()
-
-
 __all__ = [
-    "InitPublicToolsBaseClass",
-    "InitDateTimeClass",
     "PublicToolsBaseClass",
+    "DateTimeClass",
     "ReadFilesError",
     "MySQLSourceError",
     "ParamsError",

@@ -23,47 +23,49 @@ if platform.system() == "Windows":
 from dotenv import load_dotenv
 import yaml
 
-from tools.publics import PublicToolsBaseClass
-from modules.journals import InitJournalModulesClass
-from tools.publics import ReadFilesError
+from modules.journals import JournalModulesClass
+from tools.public import PublicToolsBaseClass
+from tools.public import ReadFilesError
 
 
-class BaseConfigClass(PublicToolsBaseClass):
+class BaseConfigClass:
     """Base Configuration Base Class"""
 
-    def __init__(self):
-        super(PublicToolsBaseClass, self).__init__()
-        self.__config_path = self.__get_config_path()
+    def __init__(self, *args, **kwargs):
+        self._journal = JournalModulesClass()
+        self._public_tools = PublicToolsBaseClass()
 
     def __get_config_path(self) -> str:
         """
         Get the path to the configuration file
         @return: Path to the configuration file: String
         """
-        config_path = os.path.normpath(os.path.join(self.root_path, "config.yaml"))
+        config_path = os.path.normpath(os.path.join(self._public_tools.root_path, "config.yaml"))
         if not os.path.isfile(config_path):
             config_path = os.path.normpath(
-                os.path.join(self.root_path, "../../conf/config.dev.yaml")
+                os.path.join(self._public_tools.root_path, "../../conf/config.dev.yaml")
             )
             if not os.path.isfile(config_path):
                 config_path = os.path.normpath(
-                    os.path.join(self.root_path, "conf/config.yaml")
+                    os.path.join(self._public_tools.root_path, "conf/config.yaml")
                 )
                 if not os.path.isfile(config_path):
                     config_path = os.path.normpath(
-                        os.path.join(self.root_path, "conf/config.dev.yaml")
+                        os.path.join(self._public_tools.root_path, "conf/config.dev.yaml")
                     )
         try:
             if os.path.isfile(config_path):
-                InitJournalModulesClass.journal.info(
-                    "Config File: {}".format(config_path)
-                )
                 return config_path
             else:
                 raise ReadFilesError("Config file load error.")
         except Exception as error:
-            InitJournalModulesClass.journal.exception(error)
+            self.exception(error)
             sys.exit(1)
+
+    @property
+    def __config_path(self):
+        self._journal.info("Config File: {}".format(self.__get_config_path()))
+        return self.__get_config_path()
 
     def __base_config(self) -> dict:
         """
@@ -74,12 +76,9 @@ class BaseConfigClass(PublicToolsBaseClass):
         try:
             with open(self.__config_path, "r", encoding="utf8") as file:
                 read_config = yaml.safe_load(file)
-                InitJournalModulesClass.journal.info(
-                    "configuration file：{}".format(self.__config_path)
-                )
             return read_config
         except Exception as error:
-            InitJournalModulesClass.journal.exception(error)
+            self._journal.exception(error)
 
     @property
     def _base_config(self) -> dict:
@@ -89,8 +88,8 @@ class BaseConfigClass(PublicToolsBaseClass):
 class DevelopmentConfigClass(BaseConfigClass):
     """Development Environment Configuration"""
 
-    def __init__(self):
-        super(BaseConfigClass, self).__init__()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
     def _development_config(self) -> dict:
         return self._base_config.get("Development")
@@ -99,8 +98,8 @@ class DevelopmentConfigClass(BaseConfigClass):
 class TestConfigClass(BaseConfigClass):
     """Test Environment Configuration"""
 
-    def __init__(self):
-        super(BaseConfigClass, self).__init__()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
     def _test_config(self) -> dict:
         return self._base_config.get("Test")
@@ -109,8 +108,8 @@ class TestConfigClass(BaseConfigClass):
 class ProductionConfigClass(BaseConfigClass):
     """Production Environment Configuration"""
 
-    def __init__(self):
-        super(BaseConfigClass, self).__init__()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
     def _production_config(self) -> dict:
         return self._base_config.get("Production")
@@ -119,24 +118,19 @@ class ProductionConfigClass(BaseConfigClass):
 class ConfigClass(DevelopmentConfigClass, TestConfigClass, ProductionConfigClass):
     """Configuration"""
 
-    def __init__(self):
-        super(DevelopmentConfigClass, self).__init__()
-        super(TestConfigClass, self).__init__()
-        super(ProductionConfigClass, self).__init__()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         load_dotenv()
         try:
             self.__run_env: str = os.getenv("RUN_ENVIRONMENT")
             if self.__run_env is None:
                 self.__run_env = "dev"
-                InitJournalModulesClass.journal.warning(
+                self._journal.warning(
                     "Configuration environment configuration error"
                     "Default with the development environment."
                 )
-            InitJournalModulesClass.journal.info(
-                "operating environment：{}".format(self.__run_env)
-            )
         except Exception as error:
-            InitJournalModulesClass.journal.exception(error)
+            self._journal.exception(error)
             sys.exit(1)
 
     def __development(self) -> dict:
@@ -151,6 +145,7 @@ class ConfigClass(DevelopmentConfigClass, TestConfigClass, ProductionConfigClass
     @property
     def config(self) -> dict:
         try:
+            self._journal.info("operating environment：{}".format(self.__run_env))
             if self.__run_env.lower() in ["production", "prod", "pro", "p"]:
                 return self.__production()
             elif self.__run_env.lower() in ["test", "t"]:
@@ -158,5 +153,5 @@ class ConfigClass(DevelopmentConfigClass, TestConfigClass, ProductionConfigClass
             else:
                 return self.__development()
         except Exception as error:
-            InitJournalModulesClass.journal.exception(error)
+            self._journal.exception(error)
             return self.data_dict

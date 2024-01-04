@@ -22,40 +22,25 @@ if platform.system() == "Windows":
 import time
 from typing import Callable, Mapping
 
-from modules.journals import InitJournalModulesClass
+from modules.inheritance import BaseClass
 
 
 class TimingDecorator:
     """Runtime Decorator"""
 
-    def __call__(self, func, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
+        self.__base_class = BaseClass()
+
+    def __call__(self, function, *args, **kwargs):
         def warpper(*args, **kwargs):
             start_time = time.time()
-            result = func(*args, **kwargs)
+            result = function(*args, **kwargs)
             end_time = time.time()
             elapsed_time = end_time - start_time
-            InitJournalModulesClass.journal.debug(
-                "{} run {} second".format(func.__name__, elapsed_time)
+            self.__base_class.debug(
+                "{} run {} second".format(function.__name__, elapsed_time)
             )
             return result
-
-        return warpper
-
-
-class MethodRunningAnnotateDecorator:
-    def __init__(self, annotate: str, *args, **kwargs):
-        self.annotate: str = annotate
-
-    @InitJournalModulesClass.journal.catch()
-    def __call__(self, method: Callable[..., ...], *args, **kwargs):
-        def warpper(*args, **kwargs):
-            try:
-                InitJournalModulesClass.journal.info("")
-                warpper(*args, **kwargs)
-                InitJournalModulesClass.journal.success("")
-            except Exception as error:
-                print(error)
-                InitJournalModulesClass.journal.error("")
 
         return warpper
 
@@ -76,13 +61,3 @@ class MethodDecorators:
             return results
 
         return wrapper
-
-
-@MethodDecorators("123")
-def run():
-    # print("run...")
-    return True
-
-
-if __name__ == "__main__":
-    print(run())
