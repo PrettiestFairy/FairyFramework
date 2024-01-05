@@ -1,0 +1,15 @@
+#!/bin/bash
+# File: start-redis-service
+# Editor: PyCharm
+# Author: Austin (From Chengdu.China) https://fairy.host
+# HomePage: https://github.com/AustinFairyland
+# OS: Linux Ubuntu 22.04.4 Kernel 6.2.0-36-generic 
+# CreatedTime: 2023/12/23
+
+docker run -d --name redis-standalone-service \
+-e TZ=Asia/Shanghai \
+-p 51007:6379 \
+--restart always \
+redis:latest \
+redis-server --requirepass "Redis.pwd:112#."
+

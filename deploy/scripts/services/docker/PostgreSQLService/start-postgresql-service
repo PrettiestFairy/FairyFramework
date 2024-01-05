@@ -1,0 +1,13 @@
+#!/bin/bash
+# File: start-postgresql-service
+# Editor: PyCharm
+# Author: Austin (From Chengdu.China) https://fairy.host
+# HomePage: https://github.com/AustinFairyland
+# OperatingSystem: Windows 11 Professional Workstation 23H2 Canary Channel
+# CreatedTime: 12/22/2023
+
+# PostgreSQL
+docker run --name postgresql-service -e TZ=Asia/Shanghai -p 51005:5432 \
+-v /home/ace/data/docker/volume/postgresql/latest/data/:/var/lib/postgresql/data \
+--env-file /home/ace/data/docker/env.d/postgres.env -d \
+postgres:latest

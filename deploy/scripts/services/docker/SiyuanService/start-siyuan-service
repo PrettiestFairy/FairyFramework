@@ -1,0 +1,17 @@
+#!/bin/bash
+# File: start-siyuan-service
+# Editor: PyCharm
+# Author: Austin (From Chengdu.China) https://fairy.host
+# HomePage: https://github.com/AustinFairyland
+# OperatingSystem: Windows 11 Professional Workstation 23H2 Canary Channel
+# CreatedTime: 12/23/2023
+
+docker run -d \
+-v /home/ace/data/docker/volume/siyuan_service/workspace:/siyuan/workspace \
+-e TZ=Asia/Shanghai \
+-p 51006:6806 \
+--restart always \
+--name siyuan-service \
+b3log/siyuan:latest \
+--workspace=/siyuan/workspace/ \
+--accessAuthCode="Austin.pwd:112#."

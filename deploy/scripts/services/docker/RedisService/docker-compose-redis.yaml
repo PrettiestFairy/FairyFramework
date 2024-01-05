@@ -1,0 +1,8 @@
+version: "3.7"
+services:
+  redis:
+    image: redis:latest
+    container_name: RedisStandalone
+    ports:
+      - "51007:6379"
+    command: [ "redis-server", "--requirepass", "Redis.pwd:112#." ]

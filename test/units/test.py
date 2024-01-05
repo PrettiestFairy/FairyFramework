@@ -21,11 +21,12 @@ if platform.system() == "Windows":
 
 from tools.public import PublicToolsBaseClass
 from modules.journals import JournalModulesClass
-from modules.decorator import TimingDecorator
+from modules.decorator import TimeDecorators
 from tools.public import DateTimeClass
 from modules.inheritance import BaseClass
 from tools.database import MySQLStandaloneToolsClass
 from tools.database import MySQLMasterSlaveDBRouterToolsClass
+from modules.decorator import MethodDecorators
 
 import gmpy2
 import hashlib
@@ -35,12 +36,16 @@ class TestClass(MySQLStandaloneToolsClass, MySQLMasterSlaveDBRouterToolsClass, B
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+    @MethodDecorators(annotation="Query Method")
     def method(self):
-        sql = "select * " "from public_db_test.tb_test;"
+        sql = "select * from public_db_test.tb_test;"
         a = self.query(sql)
         print(a)
         return True
 
+@MethodDecorators(annotation="123")
+def te():
+    print(1)
 
 def main(*args, **kwargs):
     journal = JournalModulesClass()
@@ -48,6 +53,7 @@ def main(*args, **kwargs):
     for i in TestClass.__mro__:
         journal.debug("{}".format(i))
     print(test.method())
+    print(te())
 
 
 if __name__ == "__main__":

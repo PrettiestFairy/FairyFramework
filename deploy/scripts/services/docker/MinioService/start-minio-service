@@ -1,0 +1,16 @@
+#!/bin/bash
+# File: start-minio-service
+# Editor: PyCharm
+# Author: Austin (From Chengdu.China) https://fairy.host
+# HomePage: https://github.com/AustinFairyland
+# OS: Linux Ubuntu 22.04.4 Kernel 6.2.0-36-generic
+# CreatedTime: 2023/12/22
+
+docker run -p 51000:51000 -p 51001:51001 --name minio-service -d --restart=always \
+-e "MINIO_ROOT_USER=Austin" \
+-e "MINIO_ROOT_PASSWORD=Austin.pwd:112#." \
+-e TZ=Asia/Shanghai \
+-v /home/ace/data/docker/volume/minio_service/data:/data \
+-v /home/ace/data/docker/volume/minio_service/config:/root/.minio \
+minio/minio server /data --console-address ":51000" --address ":51001"
+

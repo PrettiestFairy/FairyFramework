@@ -1,0 +1,16 @@
+#!/bin/bash
+# @File: start-portainer-service
+# @Editor: PyCharm
+# @Author: Austin (From Chengdu.China) https://fairy.host
+# @HomePage: https://github.com/AustinFairyland
+# @OperatingSystem: Windows 11 Professional Workstation 23H2 Canary Channel
+# @CreatedTime: 2024-01-02
+
+docker run -d --name protainer-serivce \
+-e TZ=Asia/Shanghai \
+-p 51011:9000 \
+-p 51012:8000 \
+--restart always \
+-v /var/run/docker.sock:/var/run/docker.sock \
+-v /home/ace/data/docker/volume/portainer-service/data:/data \
+docker.io/portainer/portainer-ce:latest
