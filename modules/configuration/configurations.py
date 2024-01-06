@@ -59,7 +59,7 @@ class BaseConfigClass:
             else:
                 raise ReadFilesError("Config file load error.")
         except Exception as error:
-            self.exception(error)
+            self._journal.exception(error)
             sys.exit(1)
 
     @property
@@ -126,7 +126,7 @@ class ConfigClass(DevelopmentConfigClass, TestConfigClass, ProductionConfigClass
             if self.__run_env is None:
                 self.__run_env = "dev"
                 self._journal.warning(
-                    "Configuration environment configuration error"
+                    "Configuration environment configuration error "
                     "Default with the development environment."
                 )
         except Exception as error:
@@ -145,7 +145,7 @@ class ConfigClass(DevelopmentConfigClass, TestConfigClass, ProductionConfigClass
     @property
     def config(self) -> dict:
         try:
-            self._journal.info("operating environment：{}".format(self.__run_env))
+            self._journal.info("Operating environment：{}".format(self.__run_env))
             if self.__run_env.lower() in ["production", "prod", "pro", "p"]:
                 return self.__production()
             elif self.__run_env.lower() in ["test", "t"]:
@@ -154,4 +154,4 @@ class ConfigClass(DevelopmentConfigClass, TestConfigClass, ProductionConfigClass
                 return self.__development()
         except Exception as error:
             self._journal.exception(error)
-            return self.data_dict
+            return self._public_tools.data_dict()
