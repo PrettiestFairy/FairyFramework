@@ -32,3 +32,5 @@ class Base(Config, JournalModules, PublicToolsBase):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        for cls in Base.mro():
+            print(cls)

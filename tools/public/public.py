@@ -24,14 +24,9 @@ if platform.system() == "Windows":
 class PublicToolsBase:
     """公共工具基类"""
 
-    def __init__(self):
-        self.__root_path = os.path.abspath(
-            os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-        )
-
-    @property
-    def root_path(self) -> str:
-        return self.__root_path
+    root_path = os.path.abspath(
+        os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    )
 
     @staticmethod
     def api_results():

@@ -28,7 +28,7 @@ from tools.public import PublicToolsBase
 from tools.abnormal import ReadFilesError
 
 
-class BaseConfigClass(JournalModules, PublicToolsBase):
+class BaseConfigClass(JournalModules):
     """Base Configuration Base Class"""
 
     def __init__(self, *args, **kwargs):
@@ -39,18 +39,20 @@ class BaseConfigClass(JournalModules, PublicToolsBase):
         Get the path to the configuration file
         @return: Path to the configuration file: String
         """
-        config_path = os.path.normpath(os.path.join(self.root_path, "config.yaml"))
+        config_path = os.path.normpath(
+            os.path.join(PublicToolsBase.root_path, "config.yaml")
+        )
         if not os.path.isfile(config_path):
             config_path = os.path.normpath(
-                os.path.join(self.root_path, "../../conf/config.dev.yaml")
+                os.path.join(PublicToolsBase.root_path, "../../conf/config.dev.yaml")
             )
             if not os.path.isfile(config_path):
                 config_path = os.path.normpath(
-                    os.path.join(self.root_path, "conf/config.yaml")
+                    os.path.join(PublicToolsBase.root_path, "conf/config.yaml")
                 )
                 if not os.path.isfile(config_path):
                     config_path = os.path.normpath(
-                        os.path.join(self.root_path, "conf/config.dev.yaml")
+                        os.path.join(PublicToolsBase.root_path, "conf/config.dev.yaml")
                     )
         try:
             if os.path.isfile(config_path):

@@ -24,27 +24,18 @@ from tools.database import MySQLStandaloneToolsClass
 from modules.inheritance import Base
 
 
-class TestClass(MySQLStandaloneToolsClass, Base):
+class TestClass(Base):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    # @MethodDecorators(annotation="Query Method")
-    def method(self):
-        sql = "select id from public_db_test.tb_test;"
-        a = self.query(sql)
-        print(a)
-        # for _id, _name, _update_time in a:
-        #     print(_id)
-        #     print(_name)
-        #     print(_update_time)
-        for _id in (_id for row in a for _id in row):
-            print(_id)
-        return True
+    def test(self):
+        JournalModules.debug("123")
+        print("123")
+        return "YES..."
 
 def main(*args, **kwargs):
-    jouranl = JournalModules()
     test = TestClass()
-    jouranl.debug(test.method())
+    JournalModules.debug(test.test())
 
 
 if __name__ == "__main__":
