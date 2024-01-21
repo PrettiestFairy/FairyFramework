@@ -20,8 +20,8 @@ warnings.filterwarnings("ignore")
 if platform.system() == "Windows":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
-from .journal import JournalModules
+from .journal import Journal
 
 __all__ = [
-    "JournalModules",
+    "Journal",
 ]

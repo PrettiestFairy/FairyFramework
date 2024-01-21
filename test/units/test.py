@@ -19,23 +19,23 @@ warnings.filterwarnings("ignore")
 if platform.system() == "Windows":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
-from modules.journals import JournalModules
+from modules.journals import Journal
 from tools.database import MySQLStandaloneToolsClass
 from modules.inheritance import Base
+from modules.configuration import Config
 
 
-class TestClass(Base):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+class TestClass:
 
     def test(self):
-        JournalModules.debug("123")
-        print("123")
-        return "YES..."
+        config = Config.config()
+        print(config.get("datasource"))
+        return ""
+
 
 def main(*args, **kwargs):
     test = TestClass()
-    JournalModules.debug(test.test())
+    Journal.debug(test.test())
 
 
 if __name__ == "__main__":

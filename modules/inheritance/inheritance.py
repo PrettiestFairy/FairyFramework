@@ -24,13 +24,11 @@ import time
 import random
 
 from tools.public import PublicToolsBase
-from modules.journals import JournalModules
+from modules.journals import Journal
 from modules.configuration import Config
 
 
-class Base(Config, JournalModules, PublicToolsBase):
+class Base(Config, Journal, PublicToolsBase):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        for cls in Base.mro():
-            print(cls)

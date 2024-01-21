@@ -22,7 +22,7 @@ if platform.system() == "Windows":
 import time
 from typing import Callable, Mapping
 
-from modules.journals import JournalModules
+from modules.journals import Journal
 
 
 class TimeDecorators:
@@ -30,7 +30,7 @@ class TimeDecorators:
 
     def __call__(self, function, *args, **kwargs):
         def warpper(*args, **kwargs):
-            journal = JournalModules()
+            journal = Journal()
             start_time = time.time()
             result = function(*args, **kwargs)
             end_time = time.time()
@@ -50,7 +50,7 @@ class MethodDecorators:
         def wrapper(*args, **kwargs):
             results = None
             try:
-                journal = JournalModules()
+                journal = Journal()
                 journal.info("Action Running {}".format(self.__annotation))
                 results = function(*args, **kwargs)
                 journal.info("Success Running {}".format(self.__annotation))

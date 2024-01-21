@@ -23,18 +23,16 @@ if platform.system() == "Windows":
 from dotenv import load_dotenv
 import yaml
 
-from modules.journals import JournalModules
+from modules.journals import Journal
 from tools.public import PublicToolsBase
 from tools.abnormal import ReadFilesError
 
 
-class BaseConfigClass(JournalModules):
+class BaseConfigClass:
     """Base Configuration Base Class"""
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    def __get_config_path(self) -> str:
+    @staticmethod
+    def __get_config_path() -> str:
         """
         Get the path to the configuration file
         @return: Path to the configuration file: String
@@ -60,99 +58,91 @@ class BaseConfigClass(JournalModules):
             else:
                 raise ReadFilesError("Config file load error.")
         except Exception as error:
-            self.exception(error)
+            Journal.error(error)
             sys.exit(1)
 
-    @property
-    def __config_path(self):
-        self.info("Config File: {}".format(self.__get_config_path()))
-        return self.__get_config_path()
-
-    def __base_config(self) -> dict:
+    @classmethod
+    def _base_config(cls) -> dict:
         """
         Getting configuration information
         @return: configuration information: String
         """
-
+        __config_path = cls.__get_config_path()
+        Journal.info("Config File: {}".format(__config_path))
         try:
-            with open(self.__config_path, "r", encoding="utf8") as file:
+            with open(__config_path, "r", encoding="utf8") as file:
                 read_config = yaml.safe_load(file)
             return read_config
         except Exception as error:
-            self.exception(error)
-
-    @property
-    def _base_config(self) -> dict:
-        return self.__base_config()
+            Journal.error(error)
 
 
 class DevelopmentConfigClass(BaseConfigClass):
     """Development Environment Configuration"""
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    def _development_config(self) -> dict:
-        return self._base_config.get("Development")
+    @classmethod
+    def _development_config(cls) -> dict:
+        return cls._base_config().get("Development")
 
 
 class TestConfigClass(BaseConfigClass):
     """Test Environment Configuration"""
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    def _test_config(self) -> dict:
-        return self._base_config.get("Test")
+    @classmethod
+    def _test_config(cls) -> dict:
+        return cls._base_config().get("Test")
 
 
 class ProductionConfigClass(BaseConfigClass):
     """Production Environment Configuration"""
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    def _production_config(self) -> dict:
-        return self._base_config.get("Production")
+    @classmethod
+    def _production_config(cls) -> dict:
+        return cls._base_config().get("Production")
 
 
 class Config(DevelopmentConfigClass, TestConfigClass, ProductionConfigClass):
     """Configuration"""
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        load_dotenv()
+    @classmethod
+    def __run_env(cls):
         try:
-            self.__run_env: str = os.getenv("RUN_ENVIRONMENT")
-            if self.__run_env is None:
-                self.__run_env = "dev"
-                self.warning(
+            load_dotenv()
+            __run_env: str = os.getenv("RUN_ENVIRONMENT")
+            if __run_env is None:
+                __run_env = "dev"
+                Journal.warning(
                     "Configuration environment configuration error "
                     "Default with the development environment."
                 )
         except Exception as error:
-            self.exception(error)
+            Journal.error(error)
             sys.exit(1)
+        return __run_env
 
-    def __development(self) -> dict:
-        return self._development_config()
+    @classmethod
+    def __development(cls) -> dict:
+        return cls._development_config()
 
-    def __test(self) -> dict:
-        return self._test_config()
+    @classmethod
+    def __test(cls) -> dict:
+        return cls._test_config()
 
-    def __production(self) -> dict:
-        return self._production_config()
+    @classmethod
+    def __production(cls) -> dict:
+        return cls._production_config()
 
-    @property
-    def config(self) -> dict:
+    @classmethod
+    def config(cls) -> dict:
         try:
-            self.info("Operating environment：{}".format(self.__run_env))
-            if self.__run_env.lower() in ["production", "prod", "pro", "p"]:
-                return self.__production()
-            elif self.__run_env.lower() in ["test", "t"]:
-                return self.__test()
+            __run_env = cls.__run_env()
+            Journal.info("Operating environment：{}".format(__run_env))
+            if __run_env.lower() in ["production", "prod", "pro", "p"]:
+                return cls.__production()
+            elif __run_env.lower() in ["test", "t"]:
+                return cls.__test()
             else:
-                return self.__development()
+                return cls.__development()
         except Exception as error:
-            self.exception(error)
-            return self.data_dict()
+            Journal.error(error)
+            return PublicToolsBase.data_dict()

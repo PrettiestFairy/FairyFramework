@@ -25,19 +25,20 @@ import pymysql
 from modules.inheritance import Base
 from tools.abnormal import MySQLSourceError
 from tools.abnormal import ParamsError
+from modules.configuration import Config
+from modules.journals import Journal
 
 
-class MySQLStandaloneToolsClass(Base):
+class MySQLStandaloneToolsClass:
     """MySQL Single Node Database"""
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
 
     def __mysql_config(self) -> dict:
         try:
-            config = self.config.get("datasource").get("mysql").get("standalone")
+            conf = Config.config()
+            config = conf.get("datasource").get("mysql").get("standalone")
         except Exception as error:
-            self.exception(error)
+            Journal.exception(error)
             sys.exit(1)
         return config
 
@@ -60,11 +61,11 @@ class MySQLStandaloneToolsClass(Base):
                 __charset = "utf8mb4"
             if not all((__host, __port, __user, __password, __database)):
                 raise MySQLSourceError("MySQL Source Configuration Error.")
-            self.debug("MySQL Standalone IP：{}".format(__host))
-            self.debug("MySQL Standalone Port：{}".format(__port))
-            self.debug("MySQL Standalone User：{}".format(__user))
-            self.debug("MySQL Standalone Database：{}".format(__database))
-            self.debug("MySQL Standalone Charset：{}".format(__charset))
+            Journal.debug("MySQL Standalone IP：{}".format(__host))
+            Journal.debug("MySQL Standalone Port：{}".format(__port))
+            Journal.debug("MySQL Standalone User：{}".format(__user))
+            Journal.debug("MySQL Standalone Database：{}".format(__database))
+            Journal.debug("MySQL Standalone Charset：{}".format(__charset))
             connect = pymysql.connect(
                 host=__host,
                 port=__port,
@@ -74,11 +75,11 @@ class MySQLStandaloneToolsClass(Base):
                 charset=__charset,
                 connect_timeout=5,
             )
-            self.info("MySQL Connection Successful.")
+            Journal.info("MySQL Connection Successful.")
             return connect
         except Exception as error:
             # self.exception(error)
-            self.error(error)
+            Journal.error(error)
             sys.exit(1)
 
     def query(self, query: str):
@@ -87,20 +88,20 @@ class MySQLStandaloneToolsClass(Base):
         :param query: SQL query statements: String
         :return: results: Iteratable Object
         """
-        self.debug("MySQL Data Queries")
+        Journal.debug("MySQL Data Queries")
         conn = self.__connect_tool()
         cur = conn.cursor()
         try:
-            self.info("SQL - {}".format(query))
+            Journal.info("SQL - {}".format(query))
             cur.execute(query=query)
             result = cur.fetchall()
-            self.info("Results - {}".format(result))
+            Journal.info("Results - {}".format(result))
             conn.commit()
         except Exception as error:
             result = None
             conn.rollback()
-            self.debug("Successful execution of query transaction：{}".format(query))
-            self.error(error)
+            Journal.debug("Successful execution of query transaction：{}".format(query))
+            Journal.error(error)
             # self.exception(error)
         finally:
             cur.close()
@@ -118,12 +119,12 @@ class MySQLStandaloneToolsClass(Base):
         try:
             cur.execute(query=query)
             conn.commit()
-            self.debug("MySQL Transaction Executed Successfully：{}".format(query))
+            Journal.debug("MySQL Transaction Executed Successfully：{}".format(query))
             result = True
         except Exception as error:
             conn.rollback()
-            self.error("MySQL Transaction Execution Failure：{}".format(query))
-            self.exception(error)
+            Journal.error("MySQL Transaction Execution Failure：{}".format(query))
+            Journal.exception(error)
             result = False
         finally:
             cur.close()
@@ -136,7 +137,7 @@ class MySQLStandaloneToolsClass(Base):
         :param query: SQL query statements: String
         :return: Ture or False: Boolean
         """
-        self.debug("MySQL Operations")
+        Journal.debug("MySQL Operations")
         return self.__operation(query=query)
 
     def insert(self, query: str):
@@ -145,7 +146,7 @@ class MySQLStandaloneToolsClass(Base):
         :param query: SQL query statements: String
         :return: Ture or False: Boolean
         """
-        self.debug("MySQL Data Insert")
+        Journal.debug("MySQL Data Insert")
         return self.__operation(query=query)
 
     def update(self, query: str):
@@ -154,7 +155,7 @@ class MySQLStandaloneToolsClass(Base):
         :param query: SQL query statements: String
         :return: Ture or False: Boolean
         """
-        self.debug("MySQL Data Updates")
+        Journal.debug("MySQL Data Updates")
         return self.__operation(query=query)
 
     def delete(self, query: str):
@@ -163,11 +164,11 @@ class MySQLStandaloneToolsClass(Base):
         :param query: SQL query statements: String
         :return: Ture or False: Boolean
         """
-        self.debug("MySQL Data Deletion")
+        Journal.debug("MySQL Data Deletion")
         return self.__operation(query=query)
 
 
-class MySQLMasterSlaveDBRouterToolsClass(Base):
+class MySQLMasterSlaveDBRouterToolsClass:
     """MySQL Database Read/Write Separation"""
 
     def __init__(self, *args, **kwargs):
@@ -176,9 +177,10 @@ class MySQLMasterSlaveDBRouterToolsClass(Base):
     @property
     def __mysql_config(self) -> dict:
         try:
-            config = self.config.get("datasource").get("mysql").get("dbrouter")
+            conf = Config.config()
+            config = conf.get("datasource").get("mysql").get("dbrouter")
         except Exception as error:
-            self.exception(error)
+            Journal.exception(error)
             sys.exit(1)
         return config
 
@@ -191,7 +193,7 @@ class MySQLMasterSlaveDBRouterToolsClass(Base):
             mysql_config_master: list = self.__mysql_config.get("master")
             return random.choice(mysql_config_master)
         except Exception as error:
-            self.exception(error)
+            Journal.exception(error)
             sys.exit(1)
 
     def __mysql_slave_config(self) -> dict:
@@ -203,7 +205,7 @@ class MySQLMasterSlaveDBRouterToolsClass(Base):
             mysql_config_slave: list = self.__mysql_config.get("slave")
             return random.choice(mysql_config_slave)
         except Exception as error:
-            self.exception(error)
+            Journal.exception(error)
             sys.exit(1)
 
     @property
@@ -232,12 +234,12 @@ class MySQLMasterSlaveDBRouterToolsClass(Base):
                 )
             ):
                 raise MySQLSourceError("MySQL Master Configuration Error")
-            self.debug("MySQL Data Source：MySQL Master DBRouter")
-            self.debug("MySQL Master DBRouter IP：{}".format(__master_host))
-            self.debug("MySQL Master DBRouter Port：{}".format(__master_port))
-            self.debug("MySQL Master DBRouter Username：{}".format(__master_user))
-            self.debug("MySQL Master DBRouter Database：{}".format(__master_database))
-            self.debug("MySQL Master DBRouter Charset：{}".format(__master_charset))
+            Journal.debug("MySQL Data Source：MySQL Master DBRouter")
+            Journal.debug("MySQL Master DBRouter IP：{}".format(__master_host))
+            Journal.debug("MySQL Master DBRouter Port：{}".format(__master_port))
+            Journal.debug("MySQL Master DBRouter Username：{}".format(__master_user))
+            Journal.debug("MySQL Master DBRouter Database：{}".format(__master_database))
+            Journal.debug("MySQL Master DBRouter Charset：{}".format(__master_charset))
             connect = pymysql.connect(
                 host=__master_host,
                 port=__master_port,
@@ -248,7 +250,7 @@ class MySQLMasterSlaveDBRouterToolsClass(Base):
             )
             return connect
         except Exception as error:
-            self.exception(error)
+            Journal.exception(error)
             sys.exit(1)
 
     @property
@@ -277,12 +279,12 @@ class MySQLMasterSlaveDBRouterToolsClass(Base):
                 )
             ):
                 raise MySQLSourceError("MySQL Slave Configuration Error")
-            self.debug("MySQL Data Source：MySQL Slave DBRouter")
-            self.debug("MySQL Slave DBRouter IP：{}".format(__slave_host))
-            self.debug("MySQL Slave DBRouter Port：{}".format(__slave_port))
-            self.debug("MySQL Slave DBRouter Username：{}".format(__slave_user))
-            self.debug("MySQL Slave DBRouter Database：{}".format(__slave_database))
-            self.debug("MySQL Slave DBRouter Charset：{}".format(__slave_charset))
+            Journal.debug("MySQL Data Source：MySQL Slave DBRouter")
+            Journal.debug("MySQL Slave DBRouter IP：{}".format(__slave_host))
+            Journal.debug("MySQL Slave DBRouter Port：{}".format(__slave_port))
+            Journal.debug("MySQL Slave DBRouter Username：{}".format(__slave_user))
+            Journal.debug("MySQL Slave DBRouter Database：{}".format(__slave_database))
+            Journal.debug("MySQL Slave DBRouter Charset：{}".format(__slave_charset))
             connect = pymysql.connect(
                 host=__slave_host,
                 port=__slave_port,
@@ -293,7 +295,7 @@ class MySQLMasterSlaveDBRouterToolsClass(Base):
             )
             return connect
         except Exception as error:
-            self.exception(error)
+            Journal.exception(error)
             sys.exit(1)
 
     def query(self, query: str):
@@ -302,7 +304,7 @@ class MySQLMasterSlaveDBRouterToolsClass(Base):
         :param query: SQL query statements: String
         :return: results: Iteratable Object
         """
-        self.debug("MySQL Data Queries")
+        Journal.debug("MySQL Data Queries")
         conn = self.__connect_slave_tool
         cur = conn.cursor()
         try:
@@ -312,7 +314,7 @@ class MySQLMasterSlaveDBRouterToolsClass(Base):
         except Exception as error:
             result = None
             conn.rollback()
-            self.exception(error)
+            Journal.exception(error)
         finally:
             cur.close()
             conn.close()
@@ -324,7 +326,7 @@ class MySQLMasterSlaveDBRouterToolsClass(Base):
         :param query: SQL query statements: String
         :return: True or False: Boolean
         """
-        self.debug("MySQL Data Insertion")
+        Journal.debug("MySQL Data Insertion")
         return self.master_operation(query=query)
 
     def update(self, query: str):
@@ -333,7 +335,7 @@ class MySQLMasterSlaveDBRouterToolsClass(Base):
         :param query: SQL query statements: String
         :return: True or False: Boolean
         """
-        self.debug("MySQL Data Updates")
+        Journal.debug("MySQL Data Updates")
         return self.master_operation(query=query)
 
     def delete(self, query: str):
@@ -342,7 +344,7 @@ class MySQLMasterSlaveDBRouterToolsClass(Base):
         :param query: SQL query statements: String
         :return: True or False: Boolean
         """
-        self.debug("MySQL Data Deletion")
+        Journal.debug("MySQL Data Deletion")
         return self.master_operation(query=query)
 
     def master_operation(self, query: str):
@@ -351,7 +353,7 @@ class MySQLMasterSlaveDBRouterToolsClass(Base):
         :param query: SQL query statements: String
         :return: True or False: Boolean
         """
-        self.debug("MySQL Master Operations")
+        Journal.debug("MySQL Master Operations")
         return self.__operaion(query, "master")
 
     def slave_operation(self, query: str):
@@ -360,7 +362,7 @@ class MySQLMasterSlaveDBRouterToolsClass(Base):
         :param query: SQL query statements: String
         :return: True or False: Boolean
         """
-        self.debug("MySQL Slave Operations")
+        Journal.debug("MySQL Slave Operations")
         return self.__operaion(query, "slave")
 
     def __operaion(self, query: str, dbrouter: str):
@@ -378,18 +380,18 @@ class MySQLMasterSlaveDBRouterToolsClass(Base):
             else:
                 raise ParamsError("Method parameter error")
         except Exception as error:
-            self.exception(error)
+            Journal.exception(error)
             sys.exit(1)
         cur = conn.cursor()
         try:
             cur.execute(query=query)
             conn.commit()
-            self.debug("MySQL Transaction Executed Successfully：{}".format(query))
+            Journal.debug("MySQL Transaction Executed Successfully：{}".format(query))
             result = True
         except Exception as error:
             conn.rollback()
-            self.error("MySQL Transaction Execution Failure：{}".format(query))
-            self.exception(error)
+            Journal.error("MySQL Transaction Execution Failure：{}".format(query))
+            Journal.exception(error)
             result = False
         finally:
             cur.close()
