@@ -1,0 +1,16 @@
+#!/bin/bash
+# File: start-elasticsearch8.11.0-service
+# Editor: PyCharm
+# Author: Austin (From Chengdu.China) https://fairy.host
+# HomePage: https://github.com/AustinFairyland
+# OperatingSystem: Windows 11 Professional Workstation 23H2 Canary Channel
+# CreatedTime: 12/22/2023
+
+# ElasticSearch 8.11.0
+docker run -d --name elasticsearch8.11.0-service \
+-e TZ=Asia/Shanghai \
+-e "discovery.type=single-node" \
+-p 51003:9200 \
+-p 51004:9300 \
+elasticsearch:8.11.0 \
+&& docker logs -f elasticsearch8.11.0-service

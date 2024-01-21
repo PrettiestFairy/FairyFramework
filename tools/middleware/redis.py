@@ -24,10 +24,10 @@ from redis import Redis
 from rediscluster import RedisCluster
 from rediscluster.connection import ClusterConnectionPool
 
-from modules.inheritance import BaseClass
+from modules.inheritance import Base
 
 
-class RedisStandaloneToolsClass(BaseClass):
+class RedisStandaloneToolsClass(Base):
     """Redis Single Node Tool Class"""
 
     def __init__(self, *args, **kwargs):
@@ -100,7 +100,7 @@ class RedisStandaloneToolsClass(BaseClass):
             conn.connection_pool.disconnect()
 
 
-class RedisClusterToolsClass(BaseClass):
+class RedisClusterToolsClass(Base):
     """Redis 集群工具类"""
 
     def __init__(self, *args, **kwargs):

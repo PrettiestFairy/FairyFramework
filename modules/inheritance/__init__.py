@@ -23,8 +23,8 @@ if platform.system() == 'Windows':
 import time
 import random
 
-from .inheritance import BaseClass
+from .inheritance import Base
 
 __all__ = [
-    "BaseClass"
+    "Base"
 ]

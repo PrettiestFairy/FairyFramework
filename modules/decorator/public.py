@@ -22,24 +22,20 @@ if platform.system() == "Windows":
 import time
 from typing import Callable, Mapping
 
-from modules.inheritance import BaseClass
+from modules.journals import JournalModules
 
 
-class TimingDecorator:
+class TimeDecorators:
     """Runtime Decorator"""
-
-    def __init__(self, *args, **kwargs):
-        self.__base_class = BaseClass()
 
     def __call__(self, function, *args, **kwargs):
         def warpper(*args, **kwargs):
+            journal = JournalModules()
             start_time = time.time()
             result = function(*args, **kwargs)
             end_time = time.time()
             elapsed_time = end_time - start_time
-            self.__base_class.debug(
-                "{} run {} second".format(function.__name__, elapsed_time)
-            )
+            journal.debug("{} run {} second".format(function.__name__, elapsed_time))
             return result
 
         return warpper
@@ -49,15 +45,18 @@ class MethodDecorators:
     def __init__(self, annotation):
         self.__annotation = annotation
 
-    @TimingDecorator()
+    @TimeDecorators()
     def __call__(self, function, *args, **kwargs):
         def wrapper(*args, **kwargs):
-            print("Start Running {}".format(self.__annotation))
             results = None
             try:
+                journal = JournalModules()
+                journal.info("Action Running {}".format(self.__annotation))
                 results = function(*args, **kwargs)
+                journal.info("Success Running {}".format(self.__annotation))
             except Exception as error:
-                print(error)
+                journal.info("Failure Running {}".format(self.__annotation))
+                journal.error(error)
             return results
 
         return wrapper

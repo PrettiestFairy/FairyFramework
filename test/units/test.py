@@ -19,35 +19,23 @@ warnings.filterwarnings("ignore")
 if platform.system() == "Windows":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
-from tools.public import PublicToolsBaseClass
-from modules.journals import JournalModulesClass
-from modules.decorator import TimingDecorator
-from tools.public import DateTimeClass
-from modules.inheritance import BaseClass
+from modules.journals import JournalModules
 from tools.database import MySQLStandaloneToolsClass
-from tools.database import MySQLMasterSlaveDBRouterToolsClass
-
-import gmpy2
-import hashlib
+from modules.inheritance import Base
 
 
-class TestClass(MySQLStandaloneToolsClass, MySQLMasterSlaveDBRouterToolsClass, BaseClass):
+class TestClass(Base):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def method(self):
-        sql = "select * " "from public_db_test.tb_test;"
-        a = self.query(sql)
-        print(a)
-        return True
-
+    def test(self):
+        JournalModules.debug("123")
+        print("123")
+        return "YES..."
 
 def main(*args, **kwargs):
-    journal = JournalModulesClass()
     test = TestClass()
-    for i in TestClass.__mro__:
-        journal.debug("{}".format(i))
-    print(test.method())
+    JournalModules.debug(test.test())
 
 
 if __name__ == "__main__":
