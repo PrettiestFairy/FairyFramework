@@ -19,49 +19,32 @@ warnings.filterwarnings("ignore")
 if platform.system() == "Windows":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
-# from tools.public import PublicToolsBaseClass
-# from modules.journals import JournalModulesClass
-# from modules.decorator import TimeDecorators
-# from tools.public import DateTimeClass
-# from modules.inheritance import BaseClass
-# from tools.database import MySQLStandaloneToolsClass
-# from tools.database import MySQLMasterSlaveDBRouterToolsClass
-# from modules.decorator import MethodDecorators
-
-import gmpy2
-import hashlib
-
-# from 
-from austin_module_daily_tools import DateTimeClass
-from austin_module_daily_tools import PublicToolsBaseClass
+from modules.journals import JournalModules
+from tools.database import MySQLStandaloneToolsClass
+from modules.inheritance import Base
 
 
+class TestClass(MySQLStandaloneToolsClass, Base):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
-# class TestClass(MySQLStandaloneToolsClass, MySQLMasterSlaveDBRouterToolsClass, BaseClass):
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-# 
-#     @MethodDecorators(annotation="Query Method")
-#     def method(self):
-#         sql = "select * from public_db_test.tb_test;"
-#         a = self.query(sql)
-#         print(a)
-#         return True
-
-# @MethodDecorators(annotation="123")
-# def te():
-#     print(1)
+    # @MethodDecorators(annotation="Query Method")
+    def method(self):
+        sql = "select id from public_db_test.tb_test;"
+        a = self.query(sql)
+        print(a)
+        # for _id, _name, _update_time in a:
+        #     print(_id)
+        #     print(_name)
+        #     print(_update_time)
+        for _id in (_id for row in a for _id in row):
+            print(_id)
+        return True
 
 def main(*args, **kwargs):
-    print(DateTimeClass.normdatetime())
-    print(PublicToolsBaseClass.obtain_root_path())
-    pass
-    # journal = JournalModulesClass()
-    # test = TestClass()
-    # for i in TestClass.__mro__:
-    #     journal.debug("{}".format(i))
-    # print(test.method())
-    # print(te())
+    jouranl = JournalModules()
+    test = TestClass()
+    jouranl.debug(test.method())
 
 
 if __name__ == "__main__":

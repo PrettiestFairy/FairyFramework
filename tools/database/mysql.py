@@ -22,14 +22,12 @@ if platform.system() == "Windows":
 import random
 import pymysql
 
-from modules.inheritance import BaseClass
-from modules.journals import JournalModulesClass
-
-from tools.public import MySQLSourceError
-from tools.public import ParamsError
+from modules.inheritance import Base
+from tools.abnormal import MySQLSourceError
+from tools.abnormal import ParamsError
 
 
-class MySQLStandaloneToolsClass(BaseClass):
+class MySQLStandaloneToolsClass(Base):
     """MySQL Single Node Database"""
 
     def __init__(self, *args, **kwargs):
@@ -79,7 +77,7 @@ class MySQLStandaloneToolsClass(BaseClass):
             self.info("MySQL Connection Successful.")
             return connect
         except Exception as error:
-            self.exception(error)
+            # self.exception(error)
             self.error(error)
             sys.exit(1)
 
@@ -93,14 +91,17 @@ class MySQLStandaloneToolsClass(BaseClass):
         conn = self.__connect_tool()
         cur = conn.cursor()
         try:
+            self.info("SQL - {}".format(query))
             cur.execute(query=query)
             result = cur.fetchall()
+            self.info("Results - {}".format(result))
             conn.commit()
         except Exception as error:
             result = None
             conn.rollback()
             self.debug("Successful execution of query transaction：{}".format(query))
-            self.exception(error)
+            self.error(error)
+            # self.exception(error)
         finally:
             cur.close()
             conn.cursor()
@@ -166,7 +167,7 @@ class MySQLStandaloneToolsClass(BaseClass):
         return self.__operation(query=query)
 
 
-class MySQLMasterSlaveDBRouterToolsClass(BaseClass):
+class MySQLMasterSlaveDBRouterToolsClass(Base):
     """MySQL Database Read/Write Separation"""
 
     def __init__(self, *args, **kwargs):

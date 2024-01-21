@@ -29,20 +29,13 @@ class BuildMySQL:
 
     def __table(self, name):
         return Table(name)
-
-    def __select(self, field_iterable):
-        if not field_iterable:
-            results = "*"
-        else:
-            results = ",".join(field_iterable)
-        return results
     
-    def __query(self, field_iterable):
-        results = MySQLQuery.from_("tb_name").select(self.__select(field_iterable))
+    def __select(self, field_iterable):
+        results = MySQLQuery.from_("tb_name").select(*field_iterable)
         return results
 
     def test(self):
-        a = self.__query(("id", "name"))
+        a = self.__select(("id", "name"))
         print(a.get_sql())
 
 

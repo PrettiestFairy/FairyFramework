@@ -23,12 +23,12 @@ if platform.system() == 'Windows':
 import time
 import random
 
-from tools.public import PublicToolsBaseClass
-from modules.journals import JournalModulesClass
-from modules.configuration import ConfigClass
+from tools.public import PublicToolsBase
+from modules.journals import JournalModules
+from modules.configuration import Config
 
 
-class BaseClass(ConfigClass, JournalModulesClass, PublicToolsBaseClass):
+class Base(Config, JournalModules, PublicToolsBase):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

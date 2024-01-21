@@ -10,11 +10,11 @@ Development:
   datasource:
     mysql:
       standalone:
-        host: mapping.fairies.ltd
-        port: 51002
+        host: localhost
+        port: 3306
         user: root
-        password: MySQL.pwd:112#.
-        database: public_db_test
+        password: 123.pwd:112#.
+        database: db
         # 字符集可以不写 默认 utf8mb4
         charset: utf8mb4
       dbrouter:

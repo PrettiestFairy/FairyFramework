@@ -23,20 +23,20 @@ if platform.system() == "Windows":
 from loguru import logger
 import threading
 
-from tools.public import PublicToolsBaseClass
+from tools.public import PublicToolsBase
 
 
-class JournalModulesClass(PublicToolsBaseClass):
+class JournalModules(PublicToolsBase):
     """Log Module Class"""
 
     # __instance_lock = threading.Lock()
     # __logger_instance = False
-    # 
+    #
     # def __new__(cls):
     #     if not cls.__logger_instance:
     #         with cls.__instance_lock:
     #             if not cls.__logger_instance:
-    #                 cls.__logger_instance = super(JournalModulesClass, cls).__new__(cls)
+    #                 cls.__logger_instance = super(JournalModules, cls).__new__(cls)
     #                 cls.__logger_instance.__config_logger()
     #     return cls.__logger_instance.__logs
 
@@ -51,29 +51,6 @@ class JournalModulesClass(PublicToolsBaseClass):
         logger.remove()
         logger.add(
             sink=self.__logs_path,
-            rotation="10 MB",
-            retention="180 days",
-            format="[{time:YYYY-MM-DD HH:mm:ss} | {elapsed} | {level:<8}]: {message}",
-            compression="gz",
-            encoding="utf-8",
-            # level: TRACE, DEBUG, INFO, SUCCESS, WARNING, ERROR, CRITICAL
-            level="DEBUG",
-            enqueue=True,
-            colorize=True,
-            backtrace=True,
-        )
-
-    def __config_logger(self):
-        """
-        Logger configuration
-        @return: None
-        """
-        __public_tools = PublicToolsBaseClass()
-        logs_path = os.path.normpath(
-            os.path.join(__public_tools.root_path, "logs/services.log")
-        )
-        logger.add(
-            sink=logs_path,
             rotation="10 MB",
             retention="180 days",
             format="[{time:YYYY-MM-DD HH:mm:ss} | {elapsed} | {level:<8}]: {message}",
