@@ -20,7 +20,7 @@ if platform.system() == "Windows":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 from modules.journals import Journal
-from tools.database import MySQLStandaloneToolsClass
+from tools.database import MySQLStandaloneTools
 from modules.inheritance import Base
 from modules.configuration import Config
 
@@ -28,8 +28,8 @@ from modules.configuration import Config
 class TestClass:
 
     def test(self):
-        config = Config.config()
-        print(config.get("datasource"))
+        print(MySQLStandaloneTools.query("select * from public_db_test.tb_test;"))
+        print(MySQLStandaloneTools.query("select * from public_db_test.tb_test;"))
         return ""
 
 

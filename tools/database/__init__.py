@@ -23,10 +23,10 @@ if platform.system() == 'Windows':
 import time
 import random
 
-from .mysql import MySQLStandaloneToolsClass
-from .mysql import MySQLMasterSlaveDBRouterToolsClass
+from .mysql import MySQLStandaloneTools
+from .mysql import MySQLMasterSlaveDBRouterTools
 
 __all__ = [
-    'MySQLStandaloneToolsClass',
-    'MySQLMasterSlaveDBRouterToolsClass'
+    'MySQLStandaloneTools',
+    'MySQLMasterSlaveDBRouterTools'
 ]

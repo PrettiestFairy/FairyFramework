@@ -22,18 +22,17 @@ if platform.system() == "Windows":
 import random
 import pymysql
 
-from modules.inheritance import Base
 from tools.abnormal import MySQLSourceError
 from tools.abnormal import ParamsError
 from modules.configuration import Config
 from modules.journals import Journal
 
 
-class MySQLStandaloneToolsClass:
+class MySQLStandaloneTools:
     """MySQL Single Node Database"""
 
-
-    def __mysql_config(self) -> dict:
+    @staticmethod
+    def __mysql_config() -> dict:
         try:
             conf = Config.config()
             config = conf.get("datasource").get("mysql").get("standalone")
@@ -42,13 +41,14 @@ class MySQLStandaloneToolsClass:
             sys.exit(1)
         return config
 
-    def __connect_tool(self):
+    @classmethod
+    def __connect_tool(cls):
         """
         MySQL Connections
         :return: Connection object: MySQL Connect Object
         """
         try:
-            mysql_config = self.__mysql_config()
+            mysql_config = cls.__mysql_config()
             if mysql_config is None:
                 raise MySQLSourceError("MySQL Source Configuration Error.")
             __host = mysql_config.get("host")
@@ -82,14 +82,15 @@ class MySQLStandaloneToolsClass:
             Journal.error(error)
             sys.exit(1)
 
-    def query(self, query: str):
+    @classmethod
+    def query(cls, query: str):
         """
         MySQL Data Queries
         :param query: SQL query statements: String
         :return: results: Iteratable Object
         """
         Journal.debug("MySQL Data Queries")
-        conn = self.__connect_tool()
+        conn = cls.__connect_tool()
         cur = conn.cursor()
         try:
             Journal.info("SQL - {}".format(query))
@@ -108,13 +109,14 @@ class MySQLStandaloneToolsClass:
             conn.cursor()
         return result
 
-    def __operation(self, query: str):
+    @classmethod
+    def __operation(cls, query: str):
         """
         Private methods execute SQL statements that do not return query data.
         :param query: SQL query statements: String
         :return: Ture or False: Boolean
         """
-        conn = self.__connect_tool()
+        conn = cls.__connect_tool()
         cur = conn.cursor()
         try:
             cur.execute(query=query)
@@ -131,51 +133,52 @@ class MySQLStandaloneToolsClass:
             conn.close()
         return result
 
-    def operation(self, query: str):
+    @classmethod
+    def operation(cls, query: str):
         """
         The executed SQL statement does not return query data.
         :param query: SQL query statements: String
         :return: Ture or False: Boolean
         """
         Journal.debug("MySQL Operations")
-        return self.__operation(query=query)
+        return cls.__operation(query=query)
 
-    def insert(self, query: str):
+    @classmethod
+    def insert(cls, query: str):
         """
         Inserting SQL Data
         :param query: SQL query statements: String
         :return: Ture or False: Boolean
         """
         Journal.debug("MySQL Data Insert")
-        return self.__operation(query=query)
+        return cls.__operation(query=query)
 
-    def update(self, query: str):
+    @classmethod
+    def update(cls, query: str):
         """
         Updating SQL Data
         :param query: SQL query statements: String
         :return: Ture or False: Boolean
         """
         Journal.debug("MySQL Data Updates")
-        return self.__operation(query=query)
+        return cls.__operation(query=query)
 
-    def delete(self, query: str):
+    @classmethod
+    def delete(cls, query: str):
         """
         Delete SQL Data
         :param query: SQL query statements: String
         :return: Ture or False: Boolean
         """
         Journal.debug("MySQL Data Deletion")
-        return self.__operation(query=query)
+        return cls.__operation(query=query)
 
 
-class MySQLMasterSlaveDBRouterToolsClass:
+class MySQLMasterSlaveDBRouterTools:
     """MySQL Database Read/Write Separation"""
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    @property
-    def __mysql_config(self) -> dict:
+    @staticmethod
+    def __mysql_config() -> dict:
         try:
             conf = Config.config()
             config = conf.get("datasource").get("mysql").get("dbrouter")
@@ -184,38 +187,40 @@ class MySQLMasterSlaveDBRouterToolsClass:
             sys.exit(1)
         return config
 
-    def __mysql_master_config(self) -> dict:
+    @classmethod
+    def __mysql_master_config(cls) -> dict:
         """
         Getting Master Configuration Information
         :return: Master Configuration Information: Dict
         """
         try:
-            mysql_config_master: list = self.__mysql_config.get("master")
+            mysql_config_master: list = cls.__mysql_config.get("master")
             return random.choice(mysql_config_master)
         except Exception as error:
             Journal.exception(error)
             sys.exit(1)
 
-    def __mysql_slave_config(self) -> dict:
+    @classmethod
+    def __mysql_slave_config(cls) -> dict:
         """
         Getting Slave Configuration Information
         :return: Slave Configuration Information: Dict
         """
         try:
-            mysql_config_slave: list = self.__mysql_config.get("slave")
+            mysql_config_slave: list = cls.__mysql_config.get("slave")
             return random.choice(mysql_config_slave)
         except Exception as error:
             Journal.exception(error)
             sys.exit(1)
 
-    @property
-    def __connect_master_tool(self):
+    @classmethod
+    def __connect_master_tool(cls):
         """
         MySQL Master Connection
         :return: Connection object: MySQL Connect Object
         """
         try:
-            __master_config = self.__mysql_master_config()
+            __master_config = cls.__mysql_master_config()
             __master_host = __master_config.get("host")
             __master_port = __master_config.get("port")
             __master_user = __master_config.get("user")
@@ -253,14 +258,14 @@ class MySQLMasterSlaveDBRouterToolsClass:
             Journal.exception(error)
             sys.exit(1)
 
-    @property
-    def __connect_slave_tool(self):
+    @classmethod
+    def __connect_slave_tool(cls):
         """
         MySQL Slave Connection
         :return: Connection object: MySQL Connect Object
         """
         try:
-            __slave_config = self.__mysql_slave_config()
+            __slave_config = cls.__mysql_slave_config()
             __slave_host = __slave_config.get("host")
             __slave_port = __slave_config.get("port")
             __slave_user = __slave_config.get("user")
@@ -298,14 +303,15 @@ class MySQLMasterSlaveDBRouterToolsClass:
             Journal.exception(error)
             sys.exit(1)
 
-    def query(self, query: str):
+    @classmethod
+    def query(cls, query: str):
         """
         MySQL Data Queries
         :param query: SQL query statements: String
         :return: results: Iteratable Object
         """
         Journal.debug("MySQL Data Queries")
-        conn = self.__connect_slave_tool
+        conn = cls.__connect_slave_tool()
         cur = conn.cursor()
         try:
             cur.execute(query=query)
@@ -320,52 +326,58 @@ class MySQLMasterSlaveDBRouterToolsClass:
             conn.close()
         return result
 
-    def inster(self, query: str):
+    @classmethod
+    def inster(cls, query: str):
         """
         Insert SQL Data
         :param query: SQL query statements: String
         :return: True or False: Boolean
         """
         Journal.debug("MySQL Data Insertion")
-        return self.master_operation(query=query)
+        return cls.master_operation(query=query)
 
-    def update(self, query: str):
+    @classmethod
+    def update(cls, query: str):
         """
         Update SQL Data
         :param query: SQL query statements: String
         :return: True or False: Boolean
         """
         Journal.debug("MySQL Data Updates")
-        return self.master_operation(query=query)
+        return cls.master_operation(query=query)
 
-    def delete(self, query: str):
+    @classmethod
+    def delete(cls, query: str):
         """
         Delete SQL Data
         :param query: SQL query statements: String
         :return: True or False: Boolean
         """
         Journal.debug("MySQL Data Deletion")
-        return self.master_operation(query=query)
+        return cls.master_operation(query=query)
 
-    def master_operation(self, query: str):
+    @classmethod
+    def master_operation(cls, query: str):
         """
         Mysql Master executes SQL statements that do not return query data
         :param query: SQL query statements: String
         :return: True or False: Boolean
         """
         Journal.debug("MySQL Master Operations")
-        return self.__operaion(query, "master")
+        return cls.__operaion(query=query, dbrouter="master")
 
-    def slave_operation(self, query: str):
+    @classmethod
+    def slave_operation(cls, query: str):
         """
         SQL statement executed by Mysql Slave does not return query data
         :param query: SQL query statements: String
         :return: True or False: Boolean
         """
         Journal.debug("MySQL Slave Operations")
-        return self.__operaion(query, "slave")
+        return cls.__operaion(query=query, dbrouter="slave")
 
-    def __operaion(self, query: str, dbrouter: str):
+    @classmethod
+    def __operaion(cls, query: str, dbrouter: str):
         """
         Private methods execute SQL statements that do not return query data.
         :param query: SQL query statements: String
@@ -374,9 +386,9 @@ class MySQLMasterSlaveDBRouterToolsClass:
         """
         try:
             if dbrouter == "master":
-                conn = self.__connect_master_tool
+                conn = cls.__connect_master_tool()
             elif dbrouter == "slave":
-                conn = self.__connect_slave_tool
+                conn = cls.__connect_slave_tool()
             else:
                 raise ParamsError("Method parameter error")
         except Exception as error:
