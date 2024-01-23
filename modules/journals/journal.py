@@ -46,6 +46,12 @@ class Journal:
         colorize=True,
         backtrace=True,
     )
+    logger.add(
+        sink=sys.stdout,
+        format="[{time:YYYY-MM-DD HH:mm:ss} | {level:<8}]: {message}",
+        level="DEBUG",
+        colorize=True,
+    )
     __logs = logger
 
     @classmethod

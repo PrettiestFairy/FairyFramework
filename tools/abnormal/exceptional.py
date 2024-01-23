@@ -21,16 +21,23 @@ if platform.system() == "Windows":
 
 
 class ProjectError(Exception):
-    pass
+    def __init__(self, message: str = "Internal error."):
+        self.__prompt = f"{self.__class__.__name__}: {message}"
+
+    def __str__(self):
+        return self.__prompt
 
 
-class ParamsError(ProjectError):
-    pass
+class ParameterError(ProjectError):
+    def __init__(self, message: str = "Invalid parameter."):
+        super().__init__(message=message)
 
 
-class ReadFilesError(ProjectError):
-    pass
+class ReadFileError(ProjectError):
+    def __init__(self, message: str = "Error reading file."):
+        super().__init__(message=message)
 
 
 class MySQLSourceError(ProjectError):
-    pass
+    def __init__(self, message: str = "MySQL source error."):
+        super().__init__(message=message)

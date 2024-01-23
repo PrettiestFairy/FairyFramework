@@ -26,7 +26,7 @@ from datetime import datetime
 import time
 import re
 
-from tools.abnormal import ParamsError
+from tools.abnormal import ParameterError
 
 
 class DateTimeClass:
@@ -89,7 +89,7 @@ class DateTimeClass:
                     datetime.strptime(fmt, "%Y-%m-%d %H:%M:%S").timestamp().__int__()
                 )
             else:
-                raise ParamsError
+                raise ParameterError
         else:
             results = time.time().__int__()
         return results

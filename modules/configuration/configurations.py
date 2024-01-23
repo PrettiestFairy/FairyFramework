@@ -25,7 +25,7 @@ import yaml
 
 from modules.journals import Journal
 from tools.public import PublicToolsBase
-from tools.abnormal import ReadFilesError
+from tools.abnormal import ReadFileError
 
 
 class BaseConfigClass:
@@ -56,7 +56,7 @@ class BaseConfigClass:
             if os.path.isfile(config_path):
                 return config_path
             else:
-                raise ReadFilesError("Config file load error.")
+                raise ReadFileError("Config file load error.")
         except Exception as error:
             Journal.error(error)
             sys.exit(1)
