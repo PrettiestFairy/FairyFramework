@@ -21,12 +21,12 @@ if platform.system() == "Windows":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 from loguru import logger
-import threading
+from typing import overload
 
 from tools.public import PublicToolsBase
 
 
-class JournalModules:
+class Journal:
     """Log Module Class"""
 
     __logs_path = os.path.normpath(
@@ -46,96 +46,98 @@ class JournalModules:
         colorize=True,
         backtrace=True,
     )
+    logger.add(
+        sink=sys.stdout,
+        format="[{time:YYYY-MM-DD HH:mm:ss} | {level:<8}]: {message}",
+        level="DEBUG",
+        colorize=True,
+    )
     __logs = logger
 
     @classmethod
+    def trace(cls, msg, *args, **kwargs):
+        """
+        Inherits the trace method from loguru.
+        @param msg: Log messages: String
+        @param args: Tuple
+        @param kwargs: Dict
+        @return: loguru.logger.trace
+        """
+        return cls.__logs.trace(msg, *args, **kwargs)
+
+    @classmethod
     def debug(cls, msg, *args, **kwargs):
+        """
+        Inherits the debug method from loguru.logger
+        @param msg: Debug Log messages: String
+        @param args: Tuple
+        @param kwargs: Dict
+        @return: loguru.logger.debug
+        """
         return cls.__logs.debug(msg, *args, **kwargs)
 
-    # @property
-    # def catch(self):
-    #     """
-    #     Inherits the catch method from loguru.
-    #     @return: loguru.logger.catch
-    #     """
-    #     return self.__logs.catch()
-    # 
-    # def trace(self, msg, *args, **kwargs):
-    #     """
-    #     Inherits the trace method from loguru.
-    #     @param msg: Log messages: String
-    #     @param args: Tuple
-    #     @param kwargs: Dict
-    #     @return: loguru.logger.trace
-    #     """
-    #     return self.__logs.trace(msg, *args, **kwargs)
-    # 
-    # def debug(self, msg, *args, **kwargs):
-    #     """
-    #     Inherits the debug method from loguru.logger.
-    #     @param msg: Debug Log messages: String
-    #     @param args: Tuple
-    #     @param kwargs: Dict
-    #     @return: loguru.logger.debug
-    #     """
-    #     return self.__logs.debug(msg, *args, **kwargs)
-    # 
-    # def info(self, msg, *args, **kwargs):
-    #     """
-    #     Inherits the info method from loguru.
-    #     @param msg: Info Log messages: String
-    #     @param args: Tuple
-    #     @param kwargs: Dict
-    #     @return: loguru.logger.info
-    #     """
-    #     return self.__logs.info(msg, *args, **kwargs)
-    # 
-    # def success(self, msg, *args, **kwargs):
-    #     """
-    #     Inherits the success method from loguru.
-    #     @param msg: Success Log messages: String
-    #     @param args: Tuple
-    #     @param kwargs: Dict
-    #     @return: loguru.logger.success
-    #     """
-    #     return self.__logs.success(msg, *args, **kwargs)
-    # 
-    # def warning(self, msg, *args, **kwargs):
-    #     """
-    #     Inherits the warning method from loguru.
-    #     @param msg: Warning Log messages: String
-    #     @param args: Tuple
-    #     @param kwargs: Dict
-    #     @return: loguru.logger.warning
-    #     """
-    #     return self.__logs.warning(msg, *args, **kwargs)
-    # 
-    # def error(self, msg, *args, **kwargs):
-    #     """
-    #     Inherits the error method from loguru.
-    #     @param msg: Error Log messages: String
-    #     @param args: Tuple
-    #     @param kwargs: Dict
-    #     @return: loguru.logger.error
-    #     """
-    #     return self.__logs.error(msg, *args, **kwargs)
-    # 
-    # def critical(self, msg, *args, **kwargs):
-    #     """
-    #     Inherits the critical method from loguru.
-    #     @param msg: Critical Log messages: String
-    #     @param args: Tuple
-    #     @param kwargs: Dict
-    #     @return: loguru.logger.critical
-    #     """
-    #     return self.__logs.critical(msg, *args, **kwargs)
-    # 
-    # def exception(self, msg, *args, **kwargs):
-    #     """
-    #     Inherits the exception method from loguru.
-    #     @param msg: Exception Log messages: String
-    #     @param args: Tuple
-    #     @param kwargs: Dict
-    #     @return: loguru.logger.exception
-    #     """
-    #     return self.__logs.exception(msg, *args, **kwargs)
+    @classmethod
+    def info(cls, msg, *args, **kwargs):
+        """
+        Inherits the info method from loguru.
+        @param msg: Info Log messages: String
+        @param args: Tuple
+        @param kwargs: Dict
+        @return: loguru.logger.info
+        """
+        return cls.__logs.info(msg, *args, **kwargs)
+
+    @classmethod
+    def success(cls, msg, *args, **kwargs):
+        """
+        Inherits the success method from loguru.
+        @param msg: Success Log messages: String
+        @param args: Tuple
+        @param kwargs: Dict
+        @return: loguru.logger.success
+        """
+        return cls.__logs.success(msg, *args, **kwargs)
+
+    @classmethod
+    def warning(cls, msg, *args, **kwargs):
+        """
+        Inherits the warning method from loguru.
+        @param msg: Warning Log messages: String
+        @param args: Tuple
+        @param kwargs: Dict
+        @return: loguru.logger.warning
+        """
+        return cls.__logs.warning(msg, *args, **kwargs)
+
+    @classmethod
+    def error(cls, msg, *args, **kwargs):
+        """
+        Inherits the error method from loguru.
+        @param msg: Error Log messages: String
+        @param args: Tuple
+        @param kwargs: Dict
+        @return: loguru.logger.error
+        """
+        return cls.__logs.error(msg, *args, **kwargs)
+
+    @classmethod
+    def critical(cls, msg, *args, **kwargs):
+        """
+        Inherits the critical method from loguru.
+        @param msg: Critical Log messages: String
+        @param args: Tuple
+        @param kwargs: Dict
+        @return: loguru.logger.critical
+        """
+        return cls.__logs.critical(msg, *args, **kwargs)
+
+    @classmethod
+    def exception(cls, msg, *args, **kwargs):
+        """
+        Inherits the exception method from loguru.
+        @param msg: Exception Log messages: String
+        @param args: Tuple
+        @param kwargs: Dict
+        @return: loguru.logger.exception
+        """
+        return cls.__logs.exception(msg, *args, **kwargs)
