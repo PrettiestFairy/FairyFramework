@@ -24,9 +24,9 @@ import time
 import random
 
 from .mysql import MySQLStandaloneTools
-from .mysql import MySQLMasterSlaveDBRouterTools
+# from .mysql import MySQLMasterSlaveDBRouterTools
 
 __all__ = [
     'MySQLStandaloneTools',
-    'MySQLMasterSlaveDBRouterTools'
+    # 'MySQLMasterSlaveDBRouterTools'
 ]

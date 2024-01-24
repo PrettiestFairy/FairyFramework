@@ -24,23 +24,11 @@ from datetime import datetime
 from typing import Any
 
 from modules.journals import Journal
-from tools.database import MySQLStandaloneTools
-from modules.inheritance import Base
-from modules.configuration import Config
-from tools.abnormal import ParameterError, MySQLSourceError, ProjectError
+from controller.datasource import MySQLStandalone
 
 
 class TestClass:
     def test(self):
-        __conf = Config.config()
-        config = __conf.get("datasource").get("mysql").get("standalone")
-        mysql_controller = MySQLStandaloneTools(
-            host=config.get("host"),
-            port=config.get("port"),
-            user=config.get("user"),
-            password=config.get("password"),
-            database=config.get("database"),
-        )
         sql_query = (
             "select id, name from public_db_test.tb_test where id = %(id)s;",
             "select count(id) from public_db_test.tb_test;",
@@ -50,7 +38,7 @@ class TestClass:
         )
         # sql_args = ({"id": 1}, None, {"name1": "于萌萌", "name2": "邵磊"}, {"id": "10"}, None)
         sql_args = ({"id": 1}, None, None)
-        results = mysql_controller.execute(sql_query, sql_args)
+        results = MySQLStandalone.controller.execute(sql_query, sql_args)
         Journal.debug(results)
         user_1_info, user_total, user_info = results
         for user_1_id, user_1_name in user_1_info:
@@ -70,9 +58,9 @@ class TestClass:
             Journal.debug(
                 f"用户ID: {_id}, 用户名: {_name}, 创建时间: {_create_time.timestamp().__int__()}, 修改时间: {_update_time.strftime('%Y-%m-%d %H:%M:%S')}, 用户状态: {_status}"
             )
-        # mysql_controller.close()
-        a = mysql_controller.execute("select * from public_db_test.tb_test;")
+        a = MySQLStandalone.controller.execute("select aa from public_db_test.tb_test;")
         print(a)
+        MySQLStandalone.controller.close()
 
 
 def main(*args, **kwargs):
@@ -81,8 +69,9 @@ def main(*args, **kwargs):
 
 
 def test():
-    # print(datetime.now().timetuple(), type(datetime.now()))
-    print(res.__len__())
+    from pyfiglet import Figlet
+    f = Figlet("slant", width=120)
+    print(f.renderText("Austin Framework"))
 
 
 if __name__ == "__main__":
