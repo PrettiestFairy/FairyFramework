@@ -1,6 +1,6 @@
 # coding: utf8
 """ 
-@File: mysql.py
+@File: source.py
 @Editor: PyCharm
 @Author: Austin (From Chengdu.China) https://fairy.host
 @HomePage: https://github.com/AustinFairyland
@@ -19,29 +19,19 @@ warnings.filterwarnings("ignore")
 if platform.system() == "Windows":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
-from typing import Union, Any
+from typing import Union, Any, overload
 import random
 import pymysql
+import psycopg2
 
 from modules.journals import Journal
 
 
-class MySQLStandaloneTools:
-    """MySQL Single Node Database"""
-
-    def __init__(
-        self,
-        host: str,
-        port: int,
-        user: str,
-        password: str,
-        database: str,
-        charset: str = "utf8mb4",
-        connect_timeout: int = 10,
-    ):
+class BaseDataSource:
+    def __init__(self, host: str, port: int, user: str, password: str, database: str):
         """
-        Initialize MySQL database connection.
-            初始化MySQL数据库连接。
+        Initialize datasource info.
+            初始化数据源信息。
         @param host: Database host address. | 数据库主机地址
         @type host: str
         @param port: Database port. | 数据库端口
@@ -52,65 +42,62 @@ class MySQLStandaloneTools:
         @type password: str
         @param database: Database name to connect to. | 要连接的数据库名称
         @type database: str
-        @param charset: Database charset, default is 'utf8mb4'. | 数据库字符集，默认为'utf8mb4'
-        @type charset: str
-        @param connect_timeout: Connection timeout in seconds, default is 10. | 连接超时时间，默认为10秒
-        @type connect_timeout: int
         """
-        self.__host = host
-        self.__port = port
-        self.__user = user
-        self.__password = password
-        self.__database = database
-        self.__charset = charset
-        self.__connect_timeout = connect_timeout
-        self.__init_connect()
+        self._host = host
+        self._port = port
+        self._user = user
+        self._password = password
+        self._database = database
+        self.__connect = None
+        self.__cursor = None
+        # self._init_connect()
 
-    def __connect_process(self) -> pymysql.connections.Connection:
+    def _connect(
+        self, default: bool = False
+    ) -> Union[pymysql.connections.Connection, Any, ...]:
         """
-        Handle database connection.
-            处理数据库连接。
-        @return: Returns the database connection object. | 返回数据库连接对象
-        @rtype: pymysql.connections.Connection
+        Initialize datasource connection.
+            初始化连接
+        @return: Database Connect Object. | 数据库连接对象
+        @rtype: DataBase Object. | 数据库连接对象
         """
-        try:
-            connect = pymysql.connect(
-                host=self.__host,
-                port=self.__port,
-                user=self.__user,
-                password=self.__password,
-                database=self.__database,
-                charset=self.__charset,
-                connect_timeout=self.__connect_timeout,
-            )
-            Journal.success("MySQL Connect: OK")
-        except Exception as error:
-            Journal.error(error)
-            return
-        return connect
+        if "default" in locals() and default:
+            try:
+                connect = pymysql.connect(
+                    host=self._host,
+                    port=self._port,
+                    user=self._user,
+                    password=self._password,
+                    database=self._database,
+                    charset="utf8mb4",
+                    connect_timeout=10,
+                )
+                Journal.success("MySQL Connect: OK")
+            except Exception as error:
+                Journal.error(error)
+                raise
+            return connect
+        else:
+            raise NotImplementedError
+
+    def _init_connect(self, default: bool = False) -> None:
+        """
+        Initialize datasource connection and create the database cursor.
+            初始化连接并创建游标
+        @return: None
+        @rtype: None
+        """
+        self.__connect = self._connect(default=default)
+        self.__cursor = self.__connect.cursor()
 
     def __connect_cursor(self):
         """
-        Create and return a database cursor.
-            创建并返回数据库游标。
-        @return: Returns the database cursor. | 返回数据库游标
-        @rtype: pymysql.cursors.Cursor
+        Create the database cursor.
+            创建数据库游标
+        @return: DataBase Cursor Object. | 数据库游标对象
+        @rtype: DataBase Cursor Object. | 数据库游标对象
         """
-        try:
-            results = self.__connect.cursor()
-            Journal.success("MySQL Cursor: OK")
-        except Exception as error:
-            Journal.error(error)
-            return
-        return results
-
-    def __init_connect(self) -> None:
-        """
-        Initialize and establish database connection and cursor.
-            初始化并建立数据库连接和游标。
-        """
-        self.__connect = self.__connect_process()
-        self.__cursor = self.__connect_cursor()
+        return self.__connect.cursor()
 
     def __close_connect(self) -> None:
         """
@@ -120,7 +107,7 @@ class MySQLStandaloneTools:
         if self.__connect:
             self.__connect.close()
             self.__connect = None
-            Journal.debug("MySQL has been disconnected.")
+            Journal.debug("Database has been disconnected.")
 
     def __close_cursor(self) -> None:
         """
@@ -130,7 +117,7 @@ class MySQLStandaloneTools:
         if self.__cursor:
             self.__cursor.close()
             self.__cursor = None
-            Journal.debug("MySQL has disconnected the cursor.")
+            Journal.debug("Database has disconnected the cursor.")
 
     def __reconnect(self) -> None:
         """
@@ -138,18 +125,18 @@ class MySQLStandaloneTools:
             重连数据库。
         """
         if not self.__connect or not self.__cursor:
-            Journal.debug("Wait for MySQL to reconnect.")
+            Journal.debug("Wait for Database to reconnect.")
             if self.__connect and self.__cursor:
                 self.__close_cursor()
                 self.__cursor = self.__connect.cursor()
-                Journal.debug("MySQL cursor has been reset.")
+                Journal.debug("Database cursor has been reset.")
             elif self.__connect and not self.__cursor:
                 self.__cursor = self.__connect.cursor()
-                Journal.debug("MySQL cursor is connected.")
+                Journal.debug("Database cursor is connected.")
             elif not self.__connect and not self.__cursor:
-                self.__connect = self.__connect_process()
+                self.__connect = self._connect()
                 self.__cursor = self.__connect_cursor()
-                Journal.warning("MySQL has been reconnected.")
+                Journal.warning("Database has been reconnected.")
 
     def __close(self) -> None:
         """
@@ -161,7 +148,7 @@ class MySQLStandaloneTools:
             self.__close_connect()
         elif self.__connect and not self.__cursor:
             self.__close_connect()
-        Journal.warning("MySQL has been disconnected the all.")
+        Journal.warning("Database has been disconnected the all.")
 
     def __trace_sql_statement(self, query, args) -> str:
         """
@@ -180,7 +167,7 @@ class MySQLStandaloneTools:
         self,
         query: Union[str, tuple, list, set],
         args: Union[tuple, list, dict, None] = None,
-    ) -> Union[tuple[tuple[Any], ...], None]:
+    ) -> Union[tuple[tuple[Any], ...]]:
         """
         Execute SQL operations.
             执行SQL操作。
@@ -210,7 +197,7 @@ class MySQLStandaloneTools:
             Journal.debug("Failed to execute the rollback")
             self.__connect.rollback()
             Journal.error(error)
-            return
+            raise
         finally:
             self.__close_cursor()
         return results if "results" in locals() else tuple(results_list)
@@ -240,3 +227,48 @@ class MySQLStandaloneTools:
             关闭数据库连接和游标。
         """
         self.__close()
+
+
+class MySQLStandaloneTools(BaseDataSource):
+    def __init__(
+        self,
+        charset: str = "utf8mb4",
+        connect_timeout: int = 10,
+        *args: Any,
+        **kwargs: Any,
+    ):
+        """
+        Initialize MySQL database connection.
+            初始化MySQL数据库连接。
+        @param charset: Database charset, default is 'utf8mb4'. | 数据库字符集，默认为utf8mb4
+        @type charset: str
+        @param connect_timeout: Connection timeout in seconds, default is 10. | 连接超时时间，默认为10秒
+        @type connect_timeout: int
+        """
+        self.__charset = charset
+        self.__connect_timeout = connect_timeout
+        super().__init__(*args, **kwargs)
+        self._init_connect(default=True)
+
+
+class PostgreSQLStandaloneTools(BaseDataSource):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # self._init_connect()
+
+    def _connect(
+        self, default: bool = False
+    ) -> Union[pymysql.connections.Connection, Any, ...]:
+        try:
+            connect = psycopg2.connect(
+                host=self._host,
+                port=self._port,
+                user=self._user,
+                password=self._password,
+                database=self._database,
+            )
+            Journal.success("PostgreSQL Connect: OK")
+        except Exception as error:
+            Journal.error(error)
+            raise
+        return connect

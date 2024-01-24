@@ -31,7 +31,9 @@ class MySQLStandaloneConfig:
     """Mysql Standalone Config"""
 
     Journal.info("MySQL Data Source: MySQL Standlone.")
-    __mysql_config: dict = config.get("datasource").get("mysql").get("standalone")
+    __mysql_config: dict = (
+        config.get("datasource", {}).get("mysql", {}).get("standalone", None)
+    )
     if __mysql_config:
         Journal.success("The MySQL configuration was read successfully. Procedure")
     else:
@@ -48,3 +50,33 @@ class MySQLStandaloneConfig:
     Journal.trace(f"MySQL Standalone password: {password}")
     Journal.info(f"MySQL Standalone database: {database}")
     Journal.info(f"MySQL Standalone charset: {charset}")
+
+
+class PostgreSQLStandaloneConfig:
+    """PostgreSQLStandaloneConfig"""
+
+    Journal.info("PostgreSQL Data Source: PostgreSQL Standlone.")
+    __postgresql_config: dict = (
+        config.get("datasource", {}).get("postgresql", {}).get("standalone", None)
+    )
+    if __postgresql_config:
+        Journal.success("The PostgreSQL configuration was read successfully. Procedure")
+    else:
+        Journal.error("Failed to read the PostgreSQL configuration.")
+    __postgresql_config = {
+        "host": "",
+        "port": "",
+        "user": "",
+        "password": "",
+        "database": "",
+    }
+    host = __postgresql_config.get("host")
+    port = __postgresql_config.get("port")
+    user = __postgresql_config.get("user")
+    password = __postgresql_config.get("password")
+    database = __postgresql_config.get("database")
+    Journal.info(f"PostgreSQL Standalone host: {host}")
+    Journal.info(f"PostgreSQL Standalone port: {port}")
+    Journal.info(f"PostgreSQL Standalone user: {user}")
+    Journal.trace(f"PostgreSQL Standalone password: {password}")
+    Journal.info(f"PostgreSQL Standalone database: {database}")

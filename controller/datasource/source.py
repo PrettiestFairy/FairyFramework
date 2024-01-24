@@ -1,6 +1,6 @@
 # coding: utf8
 """ 
-@File: mysql.py
+@File: source.py
 @Editor: PyCharm
 @Author: Austin (From Chengdu.China) https://fairy.host
 @HomePage: https://github.com/AustinFairyland
@@ -22,8 +22,11 @@ if platform.system() == "Windows":
 
 from tools.datasource import MySQLStandaloneTools
 from modules.configuration import MySQLStandaloneConfig
+from tools.datasource import PostgreSQLStandaloneTools
+from modules.configuration import PostgreSQLStandaloneConfig
 
-_controller = MySQLStandaloneTools(
+
+_mysql_controller = MySQLStandaloneTools(
     host=MySQLStandaloneConfig.host,
     port=MySQLStandaloneConfig.port,
     user=MySQLStandaloneConfig.user,
@@ -32,9 +35,22 @@ _controller = MySQLStandaloneTools(
     charset=MySQLStandaloneConfig.charset,
 )
 
+_postgresql_controller = PostgreSQLStandaloneTools(
+    host=PostgreSQLStandaloneConfig.host,
+    port=PostgreSQLStandaloneConfig.port,
+    user=PostgreSQLStandaloneConfig.user,
+    password=PostgreSQLStandaloneConfig.password,
+    database=PostgreSQLStandaloneConfig.database,
+)
+
 
 class MySQLStandalone:
-    """MySQl Standalone Controller"""
+    """MySQlStandaloneController"""
 
-    global _controller
-    controller = _controller
+    controller = _mysql_controller
+
+
+class PostgreSQLStandalone:
+    """PostgreSQLStandalone"""
+
+    controller = _postgresql_controller

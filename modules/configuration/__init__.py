@@ -22,9 +22,11 @@ if platform.system() == "Windows":
 
 from .configurations import config
 from .datasource import MySQLStandaloneConfig
+from .datasource import PostgreSQLStandaloneConfig
 
 
 __all__ = [
     "config",
     "MySQLStandaloneConfig",
+    "PostgreSQLStandaloneConfig",
 ]
