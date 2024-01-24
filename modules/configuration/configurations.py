@@ -146,3 +146,6 @@ class Config(DevelopmentConfigClass, TestConfigClass, ProductionConfigClass):
         except Exception as error:
             Journal.error(error)
             return PublicToolsBase.data_dict()
+
+
+config = Config.config()

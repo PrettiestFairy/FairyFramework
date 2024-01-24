@@ -36,23 +36,44 @@ class Journal:
     logger.add(
         sink=__logs_path,
         rotation="10 MB",
-        retention="180 days",
-        format="[{time:YYYY-MM-DD HH:mm:ss} | {elapsed} | {level:<8}]: {message}",
+        retention="60 days",
+        # format="[{time:YYYY-MM-DD HH:mm:ss} | {elapsed} | {level:<8}]: {message}",
+        format="[{time:YYYY-MM-DD HH:mm:ss} | {level:<8}]: {message}",
         compression="gz",
         encoding="utf-8",
         # level: TRACE, DEBUG, INFO, SUCCESS, WARNING, ERROR, CRITICAL
-        level="DEBUG",
+        level="INFO",
         enqueue=True,
         colorize=True,
         backtrace=True,
     )
     logger.add(
         sink=sys.stdout,
-        format="[{time:YYYY-MM-DD HH:mm:ss} | {level:<8}]: {message}",
-        level="DEBUG",
+        format="[<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level:<8}</level>]: {message}",
+        level="TRACE",
         colorize=True,
     )
     __logs = logger
+    __logs.critical(
+        """
+                                                                高山仰止,景行行止.虽不能至,心向往之。  
+                                      ___              __  _          ______                                             __  
+                                     /   | __  _______/ /_(_)___     / ____/________ _____ ___  ___ _      ______  _____/ /__
+                                    / /| |/ / / / ___/ __/ / __ \   / /_  / ___/ __ `/ __ `__ \/ _ \ | /| / / __ \/ ___/ //_/
+                                   / ___ / /_/ (__  ) /_/ / / / /  / __/ / /  / /_/ / / / / / /  __/ |/ |/ / /_/ / /  / ,<   
+                                  /_/  |_\__,_/____/\__/_/_/ /_/  /_/   /_/   \__,_/_/ /_/ /_/\___/|__/|__/\____/_/  /_/|_|  
+                                  
+                                                                   江城子 . 程序员之歌
+                                                                  
+                                                               十年生死两茫茫，写程序，到天亮。
+                                                                   千行代码，Bug何处藏。
+                                                               纵使上线又怎样，朝令改，夕断肠。
+                                                               
+                                                               领导每天新想法，天天改，日日忙。
+                                                                   相顾无言，惟有泪千行。
+                                                               每晚灯火阑珊处，夜难寐，加班狂。
+        """
+    )
 
     @classmethod
     def trace(cls, msg, *args, **kwargs):

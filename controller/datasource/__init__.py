@@ -5,7 +5,7 @@
 @Author: Austin (From Chengdu.China) https://fairy.host
 @HomePage: https://github.com/AustinFairyland
 @OperatingSystem: Windows 11 Professional Workstation 23H2 Canary Channel
-@CreatedTime: 2023-10-11
+@CreatedTime: 2024-01-24
 """
 from __future__ import annotations
 
@@ -20,11 +20,8 @@ warnings.filterwarnings("ignore")
 if platform.system() == "Windows":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
-from .configurations import config
-from .datasource import MySQLStandaloneConfig
-
+from .mysql import MySQLStandalone
 
 __all__ = [
-    "config",
-    "MySQLStandaloneConfig",
+    "MySQLStandalone",
 ]
