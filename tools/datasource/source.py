@@ -170,7 +170,7 @@ class BaseDataSource:
     ) -> Union[tuple[tuple[Any], ...]]:
         """
         Execute SQL operations.
-            执行SQL操作。
+            执行 SQL 操作。
         @param query: SQL statement(s). SQL语句
         @type query: Union[str, tuple, list, set]
         @param args: SQL parameters. | SQL参数
@@ -205,7 +205,7 @@ class BaseDataSource:
     def execute(self, sql, args=None) -> Union[tuple[tuple[Any], ...], None]:
         """
         Execute single or multiple SQL statements.
-            执行单个或多个SQL语句。
+            执行单个或多个 SQL 语句。
         @param sql: SQL statement or a set of statements. | SQL语句或语句集
         @type sql: Union[str, tuple, list, set]
         @param args: Parameters for the SQL statement(s). | SQL语句的参数
@@ -239,11 +239,15 @@ class MySQLStandaloneTools(BaseDataSource):
     ):
         """
         Initialize MySQL database connection.
-            初始化MySQL数据库连接。
+            初始化 MySQL 数据库连接。
         @param charset: Database charset, default is 'utf8mb4'. | 数据库字符集，默认为utf8mb4
         @type charset: str
         @param connect_timeout: Connection timeout in seconds, default is 10. | 连接超时时间，默认为10秒
         @type connect_timeout: int
+        @param args: args
+        @type args: Any
+        @param kwargs: kwargs
+        @type kwargs: Any
         """
         self.__charset = charset
         self.__connect_timeout = connect_timeout
@@ -253,6 +257,14 @@ class MySQLStandaloneTools(BaseDataSource):
 
 class PostgreSQLStandaloneTools(BaseDataSource):
     def __init__(self, *args, **kwargs):
+        """
+        Initialize PostgreSQL database connection.
+            初始化 PostgreSQL 数据库连接。
+        @param args: args
+        @type args: Any
+        @param kwargs: kwargs
+        @type kwargs: Any
+        """
         super().__init__(*args, **kwargs)
         # self._init_connect()
 
