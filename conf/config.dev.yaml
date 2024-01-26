@@ -48,6 +48,13 @@ Development:
             password: root
             database: tb_test
             charset: utf8mb4
+    postgresql:
+      standalone:
+        host: host
+        port: 12
+        user: 11
+        password: 11
+        database: 11
   middleware:
     redis:
       standalone:

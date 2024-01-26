@@ -26,7 +26,7 @@ from typing import Any
 from modules.journals import Journal
 from modules.decorator import MethodDecorators
 from modules.decorator import TimeDecorators
-from controller.datasource import MySQLStandalone
+from controller.datasource import DataSource
 
 
 class TestClass:
@@ -42,17 +42,26 @@ class TestClass:
             # "update public_db_test.tb_test set status = false, update_time = now() where id <= %(id)s;",
             # "select * from public_db_test.tb_test;",
         )
-        # sql_args = ({"id": 1}, None, {"name1": "于萌萌", "name2": "邵磊"}, {"id": "10"}, None)
-        sql_args = ({"id": 2}, None, None)
-        results = MySQLStandalone.controller.execute(sql_query, sql_args)
-        if results:
-            Journal.debug("查询成功")
-        sql = "select * from tb_douban_movies.tb_movies_used_info where directors = %s;"
-        r1 = MySQLStandalone.controller.execute(sql, args="张吃鱼")
-        if r1:
-            print(r1)
-            Journal.debug("查询成功")
-        MySQLStandalone.controller.close()
+        # # sql_args = ({"id": 1}, None, {"name1": "于萌萌", "name2": "邵磊"}, {"id": "10"}, None)
+        sql_args = ({"id": 2}, None)
+        results = DataSource.controller.execute(sql_query, sql_args)
+        Journal.debug(results)
+        DataSource.controller.close()
+        # if results:
+        #     Journal.debug("查询成功")
+        # sql = "select * from tb_douban_movies.tb_movies_used_info where directors = %s;"
+        # r1 = DataSource.controller.execute(sql, args="张吃鱼")
+        # if r1:
+        #     # print(r1)
+        #     Journal.debug("查询成功")
+        # sql = (
+        #     "select version();",
+        #     "select version();",
+        #     "select * from internal_app_hnlt_dev.host where id = %(id)s;",
+        # )
+        # sql_vars = (None, None, {"id": 35})
+        # a = DataSource.controller.execute(sql, parameters=sql_vars)
+        DataSource.controller.close()
 
 
 @TimeDecorators

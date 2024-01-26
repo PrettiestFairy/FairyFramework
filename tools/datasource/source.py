@@ -9,6 +9,7 @@
 """
 from __future__ import annotations
 
+import os
 import sys
 import warnings
 import platform
@@ -20,11 +21,14 @@ if platform.system() == "Windows":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 from typing import Union, Any, overload
-import random
 import pymysql
 import psycopg2
+from dotenv import load_dotenv
 
 from modules.journals import Journal
+
+load_dotenv()
+_DATASOURCE = os.getenv("DATASOURCE", "MySQL")
 
 
 class BaseDataSource:
@@ -48,20 +52,26 @@ class BaseDataSource:
         self._user = user
         self._password = password
         self._database = database
-        self.__connect = None
-        self.__cursor = None
+        self.__connect: Union[
+            pymysql.connections.Connection,
+            psycopg2.extensions.connection,
+        ]
+        self.__cursor: Union[
+            pymysql.cursors.Cursor,
+            psycopg2.extensions.cursor,
+        ]
         # self._init_connect()
 
     def _connect(
         self, default: bool = False
-    ) -> Union[pymysql.connections.Connection, Any, ...]:
+    ) -> Union[pymysql.connections.Connection, psycopg2.extensions.connection]:
         """
         Initialize datasource connection.
             初始化连接
         @return: Database Connect Object. | 数据库连接对象
         @rtype: DataBase Object. | 数据库连接对象
         """
-        if "default" in locals() and default:
+        if default:
             try:
                 connect = pymysql.connect(
                     host=self._host,
@@ -90,7 +100,9 @@ class BaseDataSource:
         self.__connect = self._connect(default=default)
         self.__cursor = self.__connect.cursor()
 
-    def __connect_cursor(self):
+    def __connect_cursor(
+        self,
+    ) -> Union[pymysql.cursors.Cursor, psycopg2.extensions.cursor]:
         """
         Create the database cursor.
             创建数据库游标
@@ -146,9 +158,10 @@ class BaseDataSource:
         if self.__connect and self.__cursor:
             self.__close_cursor()
             self.__close_connect()
+            Journal.warning("Database has been disconnected the all.")
         elif self.__connect and not self.__cursor:
             self.__close_connect()
-        Journal.warning("Database has been disconnected the all.")
+            Journal.warning("Database has been disconnected the all.")
 
     def __trace_sql_statement(self, query, args) -> str:
         """
@@ -166,29 +179,37 @@ class BaseDataSource:
     def __operation(
         self,
         query: Union[str, tuple, list, set],
-        args: Union[tuple, list, dict, None] = None,
+        parameters: Union[tuple, list, dict, None] = None,
     ) -> Union[tuple[tuple[Any], ...]]:
         """
         Execute SQL operations.
             执行 SQL 操作。
         @param query: SQL statement(s). SQL语句
         @type query: Union[str, tuple, list, set]
-        @param args: SQL parameters. | SQL参数
-        @type args: Union[tuple, list, dict, None]
+        @param parameters: SQL parameters. | SQL参数
+        @type parameters: Union[tuple, list, dict, None]
         @return: Operation result. | 操作结果
         @rtype: Depends on the SQL operation
         """
         try:
             self.__reconnect()
             if isinstance(query, str):
-                Journal.trace(self.__trace_sql_statement(query, args))
-                self.__cursor.execute(query=query, args=args)
+                Journal.trace(self.__trace_sql_statement(query, parameters))
+                if _DATASOURCE == "MySQL":
+                    self.__cursor.execute(query=query, args=parameters)
+                elif _DATASOURCE == "PostgreSQL":
+                    self.__cursor.execute(query=query, vars=parameters)
                 results = self.__cursor.fetchall()
             elif isinstance(query, (tuple, list, set)):
                 results_list = []
-                for query_str, query_args in zip(query, args):
-                    Journal.trace(self.__trace_sql_statement(query_str, query_args))
-                    self.__cursor.execute(query=query_str, args=query_args)
+                for query_str, query_parameters in zip(query, parameters):
+                    Journal.trace(
+                        self.__trace_sql_statement(query_str, query_parameters)
+                    )
+                    if _DATASOURCE == "MySQL":
+                        self.__cursor.execute(query=query_str, args=query_parameters)
+                    elif _DATASOURCE == "PostgreSQL":
+                        self.__cursor.execute(query=query_str, vars=query_parameters)
                     results_list.append(self.__cursor.fetchall())
             else:
                 raise TypeError("Wrong SQL statement type.")
@@ -202,24 +223,28 @@ class BaseDataSource:
             self.__close_cursor()
         return results if "results" in locals() else tuple(results_list)
 
-    def execute(self, sql, args=None) -> Union[tuple[tuple[Any], ...], None]:
+    def execute(
+        self,
+        sql: Union[str, tuple, list, set],
+        parameters: Union[tuple, list, dict, None] = None,
+    ) -> Union[tuple[tuple[Any], ...], None]:
         """
         Execute single or multiple SQL statements.
             执行单个或多个 SQL 语句。
         @param sql: SQL statement or a set of statements. | SQL语句或语句集
         @type sql: Union[str, tuple, list, set]
-        @param args: Parameters for the SQL statement(s). | SQL语句的参数
-        @type args: Union[tuple, list, dict, None]
+        @param parameters: Parameters for the SQL statement(s). | SQL语句的参数
+        @type parameters: Union[tuple, list, dict, None]
         @return: Execution result. | 执行结果
         @rtype: Depends on the SQL operation
         """
         if (
             not isinstance(sql, str)
             and isinstance(sql, (list, tuple, set))
-            and not args
+            and not parameters
         ):
-            args = tuple([None for _ in range(len(sql))])
-        return self.__operation(query=sql, args=args)
+            parameters = tuple([None for _ in range(len(sql))])
+        return self.__operation(query=sql, parameters=parameters)
 
     def close(self):
         """
@@ -266,11 +291,11 @@ class PostgreSQLStandaloneTools(BaseDataSource):
         @type kwargs: Any
         """
         super().__init__(*args, **kwargs)
-        # self._init_connect()
+        self._init_connect()
 
     def _connect(
         self, default: bool = False
-    ) -> Union[pymysql.connections.Connection, Any, ...]:
+    ) -> Union[pymysql.connections.Connection, psycopg2.extensions.connection]:
         try:
             connect = psycopg2.connect(
                 host=self._host,

@@ -20,37 +20,35 @@ warnings.filterwarnings("ignore")
 if platform.system() == "Windows":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
+from dotenv import load_dotenv
+
+from modules.configuration import DataSourceConfig
 from tools.datasource import MySQLStandaloneTools
-from modules.configuration import MySQLStandaloneConfig
 from tools.datasource import PostgreSQLStandaloneTools
-from modules.configuration import PostgreSQLStandaloneConfig
+
+load_dotenv()
+__DATASOURCE = os.getenv("DATASOURCE", "MySQL")
+
+if __DATASOURCE == "MySQL":
+    _controller = MySQLStandaloneTools(
+        host=DataSourceConfig.host,
+        port=DataSourceConfig.port,
+        user=DataSourceConfig.user,
+        password=DataSourceConfig.password,
+        database=DataSourceConfig.database,
+        charset=DataSourceConfig.charset,
+    )
+elif __DATASOURCE == "PostgreSQL":
+    _controller = PostgreSQLStandaloneTools(
+        host=DataSourceConfig.host,
+        port=DataSourceConfig.port,
+        user=DataSourceConfig.user,
+        password=DataSourceConfig.password,
+        database=DataSourceConfig.database,
+    )
 
 
-_mysql_controller = MySQLStandaloneTools(
-    host=MySQLStandaloneConfig.host,
-    port=MySQLStandaloneConfig.port,
-    user=MySQLStandaloneConfig.user,
-    password=MySQLStandaloneConfig.password,
-    database=MySQLStandaloneConfig.database,
-    charset=MySQLStandaloneConfig.charset,
-)
+class DataSource:
+    """DataSource"""
 
-_postgresql_controller = PostgreSQLStandaloneTools(
-    host=PostgreSQLStandaloneConfig.host,
-    port=PostgreSQLStandaloneConfig.port,
-    user=PostgreSQLStandaloneConfig.user,
-    password=PostgreSQLStandaloneConfig.password,
-    database=PostgreSQLStandaloneConfig.database,
-)
-
-
-class MySQLStandalone:
-    """MySQlStandaloneController"""
-
-    controller = _mysql_controller
-
-
-class PostgreSQLStandalone:
-    """PostgreSQLStandalone"""
-
-    controller = _postgresql_controller
+    controller = _controller
