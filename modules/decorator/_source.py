@@ -1,6 +1,6 @@
 # coding: utf8
 """
-@ File: public.py
+@ File: _source.py
 @ Editor: PyCharm
 @ Author: Austin (From Chengdu.China) https://fairy.host
 @ HomePage: https://github.com/AustinFairyland
@@ -63,15 +63,11 @@ class TimeDecorators:
             @return: The return value of the decorated function. | 被装饰函数的返回值。
             @rtype: Any
             """
-            try:
-                start_time = time.time()
-                result = function(*args, **kwargs)
-                end_time = time.time()
-                elapsed_time = end_time - start_time
-                Journal.success(f"This method ran for {elapsed_time} seconds")
-            except Exception as error:
-                Journal.error(error)
-                raise
+            start_time = time.time()
+            result = function(*args, **kwargs)
+            end_time = time.time()
+            elapsed_time = end_time - start_time
+            Journal.success(f"This method ran for {elapsed_time} seconds")
             return result
 
         return warpper

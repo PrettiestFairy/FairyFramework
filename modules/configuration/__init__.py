@@ -20,8 +20,8 @@ warnings.filterwarnings("ignore")
 if platform.system() == "Windows":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
-from .configurations import config
-from .datasource import DataSourceConfig
+from ._configurations import config
+from ._datasource import DataSourceConfig
 
 
 __all__ = [
