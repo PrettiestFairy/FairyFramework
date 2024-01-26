@@ -16,17 +16,17 @@ import platform
 import asyncio
 
 sys.dont_write_bytecode = True
-warnings.filterwarnings('ignore')
-if platform.system() == 'Windows':
+warnings.filterwarnings("ignore")
+if platform.system() == "Windows":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 import time
 import random
 
-from .mysql import MySQLStandaloneTools
-# from .mysql import MySQLMasterSlaveDBRouterTools
+from .source import MySQLStandaloneTools
+from .source import PostgreSQLStandaloneTools
 
 __all__ = [
-    'MySQLStandaloneTools',
-    # 'MySQLMasterSlaveDBRouterTools'
+    "MySQLStandaloneTools",
+    "PostgreSQLStandaloneTools",
 ]

@@ -22,4 +22,7 @@ if platform.system() == "Windows":
 from .public import TimeDecorators
 from .public import MethodDecorators
 
-__all__ = ["TimeDecorators", "MethodDecorators"]
+__all__: list = [
+    "TimeDecorators",
+    "MethodDecorators",
+]

@@ -24,54 +24,59 @@ from datetime import datetime
 from typing import Any
 
 from modules.journals import Journal
-from controller.datasource import MySQLStandalone
+from modules.decorator import MethodDecorators
+from modules.decorator import TimeDecorators
+from controller.datasource import DataSource
 
 
 class TestClass:
+    """Test Class"""
+
+    @TimeDecorators
+    @MethodDecorators(annotation="测试方法")
     def test(self):
         sql_query = (
-            "select id, name from public_db_test.tb_test where id = %(id)s;",
-            "select count(id) from public_db_test.tb_test;",
+            "select * from tb_douban_movies.tb_movies_used_info where id <= %(id)s;",
+            "select count(id) from tb_douban_movies.tb_movies_used_info;",
             # "insert into public_db_test.tb_test(name) values (%(name1)s), (%(name2)s);",
             # "update public_db_test.tb_test set status = false, update_time = now() where id <= %(id)s;",
-            "select * from public_db_test.tb_test;",
+            # "select * from public_db_test.tb_test;",
         )
-        # sql_args = ({"id": 1}, None, {"name1": "于萌萌", "name2": "邵磊"}, {"id": "10"}, None)
-        sql_args = ({"id": 1}, None, None)
-        results = MySQLStandalone.controller.execute(sql_query, sql_args)
+        # # sql_args = ({"id": 1}, None, {"name1": "于萌萌", "name2": "邵磊"}, {"id": "10"}, None)
+        sql_args = ({"id": 2}, None)
+        results = DataSource.controller.execute(sql_query, sql_args)
         Journal.debug(results)
-        user_1_info, user_total, user_info = results
-        for user_1_id, user_1_name in user_1_info:
-            Journal.debug(f"用户ID: {user_1_id}, 用户名: {user_1_name}")
-        ((user_total,),) = user_total
-        Journal.debug(f"用户总数: {user_total}")
-        for _id, _name, _create_time, _update_time, _status in user_info:
-            if _status:
-                _status = True
-            else:
-                _status = False
-            _id: int
-            _name: str
-            _create_time: datetime
-            _update_time: datetime
-            _status: int
-            Journal.debug(
-                f"用户ID: {_id}, 用户名: {_name}, 创建时间: {_create_time.timestamp().__int__()}, 修改时间: {_update_time.strftime('%Y-%m-%d %H:%M:%S')}, 用户状态: {_status}"
-            )
-        a = MySQLStandalone.controller.execute("select aa from public_db_test.tb_test;")
-        print(a)
-        MySQLStandalone.controller.close()
+        DataSource.controller.close()
+        # if results:
+        #     Journal.debug("查询成功")
+        # sql = "select * from tb_douban_movies.tb_movies_used_info where directors = %s;"
+        # r1 = DataSource.controller.execute(sql, args="张吃鱼")
+        # if r1:
+        #     # print(r1)
+        #     Journal.debug("查询成功")
+        # sql = (
+        #     "select version();",
+        #     "select version();",
+        #     "select * from internal_app_hnlt_dev.host where id = %(id)s;",
+        # )
+        # sql_vars = (None, None, {"id": 35})
+        # a = DataSource.controller.execute(sql, parameters=sql_vars)
+        DataSource.controller.close()
 
 
+@TimeDecorators
+@MethodDecorators("主方法")
 def main(*args, **kwargs):
     test = TestClass()
     test.test()
 
 
+@TimeDecorators
+@MethodDecorators("测试方法")
 def test():
-    from pyfiglet import Figlet
-    f = Figlet("slant", width=120)
-    print(f.renderText("Austin Framework"))
+    import time
+
+    time.sleep(5)
 
 
 if __name__ == "__main__":

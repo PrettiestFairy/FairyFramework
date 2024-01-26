@@ -21,10 +21,10 @@ if platform.system() == "Windows":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 from .configurations import config
-from .datasource import MySQLStandaloneConfig
+from .datasource import DataSourceConfig
 
 
 __all__ = [
     "config",
-    "MySQLStandaloneConfig",
+    "DataSourceConfig",
 ]

@@ -20,8 +20,8 @@ warnings.filterwarnings("ignore")
 if platform.system() == "Windows":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
-from .mysql import MySQLStandalone
+from .source import DataSource
 
 __all__ = [
-    "MySQLStandalone",
+    "DataSource",
 ]
