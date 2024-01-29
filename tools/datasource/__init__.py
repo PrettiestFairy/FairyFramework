@@ -23,10 +23,12 @@ if platform.system() == "Windows":
 import time
 import random
 
-from .source import MySQLStandaloneTools
-from .source import PostgreSQLStandaloneTools
+from ._source import MySQLStandaloneTools
+from ._source import PostgreSQLStandaloneTools
+from ._source import PostgreSQLStandaloneSSLTools
 
 __all__ = [
     "MySQLStandaloneTools",
     "PostgreSQLStandaloneTools",
+    "PostgreSQLStandaloneSSLTools",
 ]

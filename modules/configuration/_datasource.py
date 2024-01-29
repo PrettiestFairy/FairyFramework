@@ -1,6 +1,6 @@
 # coding: utf8
 """ 
-@File: datasource.py
+@File: _datasource.py
 @Editor: PyCharm
 @Author: Austin (From Chengdu.China) https://fairy.host
 @HomePage: https://github.com/AustinFairyland
@@ -23,7 +23,7 @@ if platform.system() == "Windows":
 from dotenv import load_dotenv
 
 from modules.journals import Journal
-from .configurations import config
+from ._configurations import config
 
 
 class DataSourceConfig:
