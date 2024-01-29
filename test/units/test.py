@@ -27,6 +27,7 @@ from modules.journals import Journal
 from modules.decorator import MethodDecorators
 from modules.decorator import TimeDecorators
 from controller.datasource import DataSource
+from tools.datasource import PostgreSQLStandaloneSSLTools
 
 
 class TestClass:
@@ -35,18 +36,18 @@ class TestClass:
     @TimeDecorators
     @MethodDecorators(annotation="测试方法")
     def test(self):
-        sql_query = (
-            "select * from tb_douban_movies.tb_movies_used_info where id <= %(id)s;",
-            "select count(id) from tb_douban_movies.tb_movies_used_info;",
-            # "insert into public_db_test.tb_test(name) values (%(name1)s), (%(name2)s);",
-            # "update public_db_test.tb_test set status = false, update_time = now() where id <= %(id)s;",
-            # "select * from public_db_test.tb_test;",
-        )
+        # sql_query = (
+        #     "select * from tb_douban_movies.tb_movies_used_info where id <= %(id)s;",
+        #     "select count(id) from tb_douban_movies.tb_movies_used_info;",
+        # "insert into public_db_test.tb_test(name) values (%(name1)s), (%(name2)s);",
+        # "update public_db_test.tb_test set status = false, update_time = now() where id <= %(id)s;",
+        # "select * from public_db_test.tb_test;",
+        # )
         # # sql_args = ({"id": 1}, None, {"name1": "于萌萌", "name2": "邵磊"}, {"id": "10"}, None)
-        sql_args = ({"id": 2}, None)
-        results = DataSource.controller.execute(sql_query, sql_args)
-        Journal.debug(results)
-        DataSource.controller.close()
+        # sql_args = ({"id": 2}, None)
+        # results = DataSource.controller.execute(sql_query, sql_args)
+        # Journal.debug(results)
+        # DataSource.controller.close()
         # if results:
         #     Journal.debug("查询成功")
         # sql = "select * from tb_douban_movies.tb_movies_used_info where directors = %s;"
@@ -61,18 +62,28 @@ class TestClass:
         # )
         # sql_vars = (None, None, {"id": 35})
         # a = DataSource.controller.execute(sql, parameters=sql_vars)
-        DataSource.controller.close()
+        datasource = PostgreSQLStandaloneSSLTools(
+            ssh_host="10.65.66.167",
+            ssh_port=22,
+            ssh_username="root",
+            ssh_password="xajf!@#123",
+            remote_host="10.65.66.167",
+            remote_port=5432,
+            host="localhost",
+            port=5432,
+            user="nsc",
+            password="nsc",
+            database="nsc",
+        )
+        print(datasource.execute("select version();"))
+        # DataSource.controller.close()
 
 
-@TimeDecorators
-@MethodDecorators("主方法")
 def main(*args, **kwargs):
     test = TestClass()
     test.test()
 
 
-@TimeDecorators
-@MethodDecorators("测试方法")
 def test():
     import time
 

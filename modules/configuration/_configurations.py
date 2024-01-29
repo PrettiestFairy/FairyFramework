@@ -1,6 +1,6 @@
 # coding: utf8
 """ 
-@File: configurations.py
+@File: _configurations.py
 @Editor: PyCharm
 @Author: Austin (From Chengdu.China) https://fairy.host
 @HomePage: https://github.com/AustinFairyland

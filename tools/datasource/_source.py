@@ -1,6 +1,6 @@
 # coding: utf8
 """ 
-@File: source.py
+@File: _source.py
 @Editor: PyCharm
 @Author: Austin (From Chengdu.China) https://fairy.host
 @HomePage: https://github.com/AustinFairyland
@@ -23,6 +23,7 @@ if platform.system() == "Windows":
 from typing import Union, Any, overload
 import pymysql
 import psycopg2
+from sshtunnel import SSHTunnelForwarder
 from dotenv import load_dotenv
 
 from modules.journals import Journal
@@ -277,7 +278,7 @@ class MySQLStandaloneTools(BaseDataSource):
         self.__charset = charset
         self.__connect_timeout = connect_timeout
         super().__init__(*args, **kwargs)
-        self._init_connect(default=True)
+        # self._init_connect(default=True)
 
 
 class PostgreSQLStandaloneTools(BaseDataSource):
@@ -304,6 +305,71 @@ class PostgreSQLStandaloneTools(BaseDataSource):
                 password=self._password,
                 database=self._database,
             )
+            Journal.success("PostgreSQL Connect: OK")
+        except Exception as error:
+            Journal.error(error)
+            raise
+        return connect
+
+
+class PostgreSQLStandaloneSSLTools(BaseDataSource):
+    def __init__(
+        self,
+        ssh_host: str = "127.0.0.1",
+        ssh_port: int = 22,
+        ssh_username: str = "root",
+        ssh_password: str = "root",
+        remote_host: str = "127.0.0.1",
+        remote_port: int = 5432,
+        *args,
+        **kwargs,
+    ):
+        """
+        Initialize PostgreSQL database connection.
+            初始化 PostgreSQL SSH 数据库连接。
+        @param ssh_host: SSH Host
+        @type ssh_host: str
+        @param ssh_port: SSH Port
+        @type ssh_port: int
+        @param ssh_username: SSH Username
+        @type ssh_username: str
+        @param ssh_password: SSH Password
+        @type ssh_password: str
+        @param remote_host: Remote Host
+        @type remote_host: str
+        @param remote_port: Remote Port
+        @type remote_port: int
+        @param args: args
+        @type args: Any
+        @param kwargs: kwargs
+        @type kwargs: Any
+        """
+        self.__ssh_host: str = ssh_host
+        self.__ssh_port: int = ssh_port
+        self.__ssh_username: str = ssh_username
+        self.__ssh_password: str = ssh_password
+        self.__remote_host: str = remote_host
+        self.__remote_port: int = remote_port
+        super().__init__(*args, **kwargs)
+        self._init_connect()
+
+    def _connect(
+        self, default: bool = False
+    ) -> Union[pymysql.connections.Connection, psycopg2.extensions.connection]:
+        try:
+            with SSHTunnelForwarder(
+                (self.__ssh_host, self.__ssh_port),
+                ssh_username=self.__ssh_username,
+                ssh_password=self.__ssh_password,
+                remote_bind_address=(self.__remote_host, self.__remote_port),
+            ) as tunnel:
+                connect = psycopg2.connect(
+                    host="127.0.0.1",
+                    port=tunnel.local_bind_port,
+                    user=self._user,
+                    password=self._password,
+                    database=self._database,
+                )
             Journal.success("PostgreSQL Connect: OK")
         except Exception as error:
             Journal.error(error)
