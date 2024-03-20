@@ -1,4 +1,4 @@
-black==23.9.1
+black==24.3.0
 bpyutils==0.5.8
 build==1.0.3
 certifi==2023.7.22
